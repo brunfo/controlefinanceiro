@@ -1,0 +1,40 @@
+
+
+
+HBox, VBox, VBox , AnchorPane, BorderPane {
+    -fx-background-color: #1E88E5;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+}
+
+.sectionTitle {
+    -fx-text-fill   : #01579B;
+    -fx-font-weight : bolder;
+    -fx-font-size   : 14px;
+    }
+
+.warningText {
+    -fx-fill : #0277BD;
+    }
+
+.inputSection {
+    -fx-background-color : #E1F5FE;
+    }
+
+.button {
+    -fx-background-color : #29B6F6;
+    -fx-text-fill        : #E1F5FE;
+    -fx-font-weight      : 900;
+    }
+
+.button:hover {
+    -fx-background-color : #01579B;
+    }
+
+#montanteCol, #saldoCol  {
+    -fx-alignment: CENTER-RIGHT;
+}
+
+#dataOpCol, #dataMovCol {
+    -fx-alignment: CENTER;
+}
