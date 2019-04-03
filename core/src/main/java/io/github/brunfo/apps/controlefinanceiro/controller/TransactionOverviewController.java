@@ -95,7 +95,13 @@ public class TransactionOverviewController implements OverviewController {
         if (transaction != null) {
             // Preenche as labels com informações do objeto transaction.
             idLabel.setText((String.valueOf((transaction.getId()))));
-            accountLabel.setText(mainApp.getAccounts().get(transaction.getAccountId()).getName());
+            String accountName = null;
+            for (Account p : mainApp.getAccounts()) {
+                if (p.getId() == transaction.getAccountId()) {
+                    accountName = p.getName();
+                }
+            }
+            accountLabel.setText(accountName);
             operationDateLabel.setText(String.valueOf(transaction.getOperationDate()));
             transactionDateLabel.setText(String.valueOf(transaction.getTransactionDate()));
             descriptionLabel.setText(transaction.getDescription());
@@ -121,7 +127,6 @@ public class TransactionOverviewController implements OverviewController {
         if (selectedIndex >= 0) {
             Transaction transaction = transactionTableView.getSelectionModel().getSelectedItem();
             mainApp.deleteTransactionFromDataBase(transaction);
-            //mainApp.getTransactions().remove(transaction);
             transactionTableView.getItems().remove(selectedIndex);
         } else {
             noSelection();
@@ -133,19 +138,11 @@ public class TransactionOverviewController implements OverviewController {
      * detalhes do novo movimento.
      */
     @FXML
-    private void handleNewMovimento() {
-        Transaction tempTransaction = new Transaction(0,
-                //TODO gerir criação de conta
-                0,
-                LocalDate.now(),
-                LocalDate.now(),
-                "",
-                0.0);
+    private void handleNewTransaction() {
+        Transaction tempTransaction = new Transaction();
         boolean okClicked = mainApp.showTransactionEditDialog(tempTransaction);
         if (okClicked) {
             mainApp.saveTransaction(tempTransaction);
-        } else {
-
         }
     }
 

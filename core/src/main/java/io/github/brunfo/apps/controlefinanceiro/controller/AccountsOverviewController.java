@@ -32,7 +32,7 @@ public class AccountsOverviewController implements OverviewController {
      */
     @Override
     public void setMainApp(MainApp mainApp) {
-        this.mainApp=mainApp;
+        this.mainApp = mainApp;
         accountTableView.setItems(mainApp.getAccounts());
     }
 
@@ -43,15 +43,18 @@ public class AccountsOverviewController implements OverviewController {
         if (okClicked) {
             mainApp.saveAccount(tempAccount);
         }
-
     }
 
     @FXML
     private void handleEditAccount() {
         Account selectedAccount = accountTableView.getSelectionModel().getSelectedItem();
-        boolean okClicked = mainApp.showAccountEditDialog(selectedAccount);
-        if (okClicked)
-            mainApp.updateAccount(selectedAccount);
+        if (selectedAccount != null) {
+            boolean okClicked = mainApp.showAccountEditDialog(selectedAccount);
+            if (okClicked)
+                mainApp.updateAccount(selectedAccount);
+        } else {
+            noSelection();
+        }
     }
 
     @FXML
@@ -63,7 +66,6 @@ public class AccountsOverviewController implements OverviewController {
         } else {
             noSelection();
         }
-
     }
 
     /**
@@ -72,7 +74,7 @@ public class AccountsOverviewController implements OverviewController {
     private void noSelection() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Nenhuma seleção");
-        alert.setHeaderText("Nenhuma movimento selecionado");
+        alert.setHeaderText("Nenhuma conta selecionada");
         alert.setContentText("Por favor, selecione uma conta na tabela.");
         alert.showAndWait();
     }

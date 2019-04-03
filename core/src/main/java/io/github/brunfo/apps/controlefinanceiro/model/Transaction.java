@@ -1,9 +1,7 @@
 package io.github.brunfo.apps.controlefinanceiro.model;
 
-import io.github.brunfo.apps.controlefinanceiro.util.LocalDateAdapter;
 import javafx.beans.property.*;
 
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
 
 /**
@@ -24,7 +22,7 @@ public class Transaction {
      * Contrutor padrão
      */
     public Transaction() {
-        this(0, null, null, null, null, 0);
+        this(0, 0, LocalDate.now(), LocalDate.now(), null, 0);
     }
 
     /**
@@ -63,7 +61,6 @@ public class Transaction {
         return id;
     }
 
-
     public Integer getAccountId() {
         return accountId.get();
     }
@@ -76,8 +73,6 @@ public class Transaction {
         return accountId;
     }
 
-
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public LocalDate getOperationDate() {
         return operationDate.get();
     }
@@ -90,7 +85,6 @@ public class Transaction {
         return operationDate;
     }
 
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public LocalDate getTransactionDate() {
         return transactionDate.get();
     }

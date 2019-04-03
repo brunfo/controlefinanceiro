@@ -5,7 +5,6 @@ import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDao;
 import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDaoImpletemtation;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
-import io.github.brunfo.apps.controlefinanceiro.model.Transactions;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,12 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
 import java.io.IOException;
-import java.util.prefs.Preferences;
 
 /**
  * Classe principal. Esta classe é a classe principal que funciona de entrada,
@@ -284,10 +278,10 @@ public class MainApp extends Application {
         accountsObservableList.addAll(dbHandler.getAccounts());
     }
 
-    public void saveTransaction(Transaction transaction) {
-        int id = dbHandler.saveTransaction(transaction);
-        transaction.setId(id);
-        getTransactions().add(transaction);
+    public void saveTransaction(Transaction tempTransaction) {
+        int id = dbHandler.saveTransaction(tempTransaction);
+        tempTransaction.setId(id);
+        getTransactions().add(tempTransaction);
     }
 
     public void saveAccount(Account tempAccount) {
@@ -296,7 +290,6 @@ public class MainApp extends Application {
         //TODO verificar se foi salva pelo retorno do id
         tempAccount.setId(id);
         getAccounts().add(tempAccount); //adiciona à observableList
-        // Accounts.add(tempAccount); //adiciona às contas //TODO rever dupllicação de dados
     }
 
     public void updateTransactionToDataBase(Transaction selectedTransaction) {
@@ -336,106 +329,106 @@ public class MainApp extends Application {
     }
 
     //************* Outros ****************//
-
-    /**
-     * Retorna o arquivo de preferências do movimento, o último arquivo que foi aberto.
-     * As preferências são lidas do registro específico do SO (Sistema Operacional).
-     * Se tais prefêrencias não puderem  ser encontradas, ele retorna null.
-     *
-     * @return
-     */
-    public File getTransactionFilePath() {
-        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
-        String filePath = prefs.get("filePath", null);
-        if (filePath != null) {
-            return new File(filePath);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Define o caminho do arquivo do arquivo carregado atual. O caminho é persistido no
-     * registro específico do SO (Sistema Operacional).
-     *
-     * @param file O arquivo ou null para remover o caminho
-     */
-    private void setTransactionFilePath(File file) {
-        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
-        if (file != null) {
-            prefs.put("filePath", file.getPath());
-
-            // Update the stage title.
-            primaryStage.setTitle("AddressApp - " + file.getName());
-        } else {
-            prefs.remove("filePath");
-
-            // Update the stage title.
-            primaryStage.setTitle("AddressApp");
-        }
-    }
-
-    /**
-     * Carrega os dados da pessoa do arquivo especificado. A pessoa atual
-     * será substituída.
-     *
-     * @param file
-     */
-    public void loadTransactionDataFromFile(File file) {
-        try {
-            JAXBContext context = JAXBContext
-                    .newInstance(Transactions.class);
-            Unmarshaller um = context.createUnmarshaller();
-
-            // Reading XML from the file and unmarshalling.
-            Transactions wrapper = (Transactions) um.unmarshal(file);
-
-            transactionsObservableList.clear();
-            transactionsObservableList.addAll(Transactions.get());
-
-            // Save the file path to the registry.
-            setTransactionFilePath(file);
-
-        } catch (Exception e) { // catches ANY exception
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Ficheiro não encontrado");
-            alert.setHeaderText("Erro");
-            alert.setContentText("Não foi possível carregar dados do arquivo:\n"
-                    + file.getPath());
-            alert.showAndWait();
-        }
-    }
-
-    /**
-     * Salva os dados da pessoa atual no arquivo especificado.
-     *
-     * @param file
-     */
-    public void saveTransactionDataToFile(File file) {
-        try {
-            JAXBContext context = JAXBContext
-                    .newInstance(Transactions.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            // Envolvendo nossos dados de um movimento.
-            Transactions wrapper = new Transactions();
-            Transactions.set(transactionsObservableList);
-
-            // Enpacotando e salvando XML  no arquivo.
-            m.marshal(wrapper, file);
-
-            // Saalva o caminho do arquivo no registro.
-            setTransactionFilePath(file);
-        } catch (Exception e) { // catches ANY exception
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Não é possível salvar");
-            alert.setHeaderText("Erro");
-            alert.setContentText("Não foi possível salvar os dados do arquivo:\n"
-                    + file.getPath());
-            alert.showAndWait();
-        }
-    }
-
-
+//
+//    /**
+//     * Retorna o arquivo de preferências do movimento, o último arquivo que foi aberto.
+//     * As preferências são lidas do registro específico do SO (Sistema Operacional).
+//     * Se tais prefêrencias não puderem  ser encontradas, ele retorna null.
+//     *
+//     * @return
+//     */
+//    public File getTransactionFilePath() {
+//        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+//        String filePath = prefs.get("filePath", null);
+//        if (filePath != null) {
+//            return new File(filePath);
+//        } else {
+//            return null;
+//        }
+//    }
+//
+//    /**
+//     * Define o caminho do arquivo do arquivo carregado atual. O caminho é persistido no
+//     * registro específico do SO (Sistema Operacional).
+//     *
+//     * @param file O arquivo ou null para remover o caminho
+//     */
+//    private void setTransactionFilePath(File file) {
+//        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+//        if (file != null) {
+//            prefs.put("filePath", file.getPath());
+//
+//            // Update the stage title.
+//            primaryStage.setTitle("AddressApp - " + file.getName());
+//        } else {
+//            prefs.remove("filePath");
+//
+//            // Update the stage title.
+//            primaryStage.setTitle("AddressApp");
+//        }
+//    }
+//
+//    /**
+//     * Carrega os dados da pessoa do arquivo especificado. A pessoa atual
+//     * será substituída.
+//     *
+//     * @param file
+//     */
+//    public void loadTransactionDataFromFile(File file) {
+//        try {
+//            JAXBContext context = JAXBContext
+//                    .newInstance(Transactions.class);
+//            Unmarshaller um = context.createUnmarshaller();
+//
+//            // Reading XML from the file and unmarshalling.
+//            Transactions wrapper = (Transactions) um.unmarshal(file);
+//
+//            transactionsObservableList.clear();
+//            transactionsObservableList.addAll(Transactions.get());
+//
+//            // Save the file path to the registry.
+//            setTransactionFilePath(file);
+//
+//        } catch (Exception e) { // catches ANY exception
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Ficheiro não encontrado");
+//            alert.setHeaderText("Erro");
+//            alert.setContentText("Não foi possível carregar dados do arquivo:\n"
+//                    + file.getPath());
+//            alert.showAndWait();
+//        }
+//    }
+//
+//    /**
+//     * Salva os dados da pessoa atual no arquivo especificado.
+//     *
+//     * @param file
+//     */
+//    public void saveTransactionDataToFile(File file) {
+//        try {
+//            JAXBContext context = JAXBContext
+//                    .newInstance(Transactions.class);
+//            Marshaller m = context.createMarshaller();
+//            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//
+//            // Envolvendo nossos dados de um movimento.
+//            Transactions wrapper = new Transactions();
+//            Transactions.set(transactionsObservableList);
+//
+//            // Enpacotando e salvando XML  no arquivo.
+//            m.marshal(wrapper, file);
+//
+//            // Saalva o caminho do arquivo no registro.
+//            setTransactionFilePath(file);
+//        } catch (Exception e) { // catches ANY exception
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Não é possível salvar");
+//            alert.setHeaderText("Erro");
+//            alert.setContentText("Não foi possível salvar os dados do arquivo:\n"
+//                    + file.getPath());
+//            alert.showAndWait();
+//        }
+//    }
+//
+//
 }
