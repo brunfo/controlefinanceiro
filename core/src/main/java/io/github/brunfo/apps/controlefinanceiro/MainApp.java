@@ -179,7 +179,7 @@ public class MainApp extends Application {
             //envia preferencias de conta predefinida
             controller.setPredefinedAccount(0);
 
-            if (accountsObservableList.size()>0) {
+            if (accountsObservableList.size() > 0) {
                 //envias as contas disponiveis para selecionar
                 controller.setAvailableAccounts(accountsObservableList);
             }
@@ -194,25 +194,32 @@ public class MainApp extends Application {
      * @return true Se o usuário clicou OK,  caso contrário false.
      */
     public boolean showTransactionEditDialog(Transaction selectedTransaction) {
-        EditDialogController controller =
-                showEditDialog(
-                        "/view/TransactionEditDialog.fxml",
-                        "Editar movimento");
-        if (controller != null) {
-            // Define a pessoa no overviewController.
-            ((TransactionEditDialogController) controller).setTransaction(selectedTransaction);
+        if (accountsObservableList.size() > 0) {
+            EditDialogController controller =
+                    showEditDialog(
+                            "/view/TransactionEditDialog.fxml",
+                            "Editar movimento");
+            if (controller != null) {
+                // Define a pessoa no overviewController.
+                ((TransactionEditDialogController) controller).setTransaction(selectedTransaction);
 
-            //TODO cria ficheiro con preferencias de conta predefinida
-            //envia preferencias de conta predefinida
-            ((TransactionEditDialogController) controller).setPredefinedAccount(0);
-            //envias as contas disponiveis para selecionar
-            ((TransactionEditDialogController) controller).setAvailableAccounts(accountsObservableList);
+                //TODO cria ficheiro con preferencias de conta predefinida
+                //envia preferencias de conta predefinida
+                ((TransactionEditDialogController) controller).setPredefinedAccount(0);
+                //envias as contas disponiveis para selecionar
+                ((TransactionEditDialogController) controller).setAvailableAccounts(accountsObservableList);
 
-            // Mostra a janela e espera até o usuário fechar.
-            controller.getDialogStageStage().showAndWait();
+                // Mostra a janela e espera até o usuário fechar.
+                controller.getDialogStageStage().showAndWait();
 
-            return ((TransactionEditDialogController) controller).isOkClicked();
+                return ((TransactionEditDialogController) controller).isOkClicked();
+            }
         }
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Nenhuma conta");
+        alert.setHeaderText("Erro");
+        alert.setContentText("Não existe ainda nenhuma conta criada!\nPara adicionar movimentos tem de ter pelo menos 1 conta!");
+        alert.showAndWait();
         return false;
     }
 
@@ -237,7 +244,7 @@ public class MainApp extends Application {
                 showEditDialog(
                         "/view/AccountEditDialog.fxml",
                         "Editar conta");
-        if (controller!=null) {
+        if (controller != null) {
             ((AccountEditDialogController) controller).setAccount(selectedAccount);
 
             // Mostra a janela e espera até o usuário fechar.
@@ -247,42 +254,6 @@ public class MainApp extends Application {
         }
         return false;
     }
-//    /**
-//     * Abre uma janela para editar detalhes para a pessoa especificada. Se o usuário clicar
-//     * OK, as mudanças são salvasno objeto movimento fornecido e retorna true.
-//     *
-//     * @param selectedConta O objeto movimento a ser editado
-//     * @return true Se o usuário clicou OK,  caso contrário false.
-//     */
-//    public boolean showAccountEditDialog(Account selectedConta) {
-//        try {
-//            // Carrega o arquivo fxml e cria um novo stage para a janela popup.
-//            FXMLLoader loader = new FXMLLoader();
-//            loader.setLocation(MainApp.class.getResource("/view/AccountEditDialog.fxml"));
-//            AnchorPane page = loader.load();
-//
-//            // Cria o palco dialogStage.
-//            Stage dialogStage = new Stage();
-//            dialogStage.setTitle("Editar conta");
-//            dialogStage.initModality(Modality.WINDOW_MODAL);
-//            dialogStage.initOwner(primaryStage);
-//            Scene scene = new Scene(page);
-//            dialogStage.setScene(scene);
-//
-//            // Define a pessoa no controller.
-//            AccountEditDialogController controller = loader.getController();
-//            controller.setDialogStage(dialogStage);
-//            controller.setAccount(selectedConta);
-//
-//            // Mostra a janela e espera até o usuário fechar.
-//            dialogStage.showAndWait();
-//
-//            return controller.isOkClicked();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
 
     /**
      * Mostra o Accounts

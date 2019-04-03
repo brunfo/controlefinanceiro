@@ -144,6 +144,8 @@ public class TransactionOverviewController implements OverviewController {
         boolean okClicked = mainApp.showTransactionEditDialog(tempTransaction);
         if (okClicked) {
             mainApp.saveTransaction(tempTransaction);
+        } else {
+
         }
     }
 
