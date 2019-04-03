@@ -1,6 +1,9 @@
 package io.github.brunfo.apps.controlefinanceiro.model;
 
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Classe Model para uma Account.
@@ -28,16 +31,6 @@ public class Account {
     public Account(int id, String name) {
         this.id = new SimpleObjectProperty<>(id);
         this.name = new SimpleStringProperty(name);
-    }
-
-    public static Account get(int idAccount) {
-        if (Accounts.get().size() < 1) {
-            Account account = Accounts.get(idAccount);
-            if (account == null)
-                account = new Account(idAccount,  "Account: " + idAccount);
-            Accounts.add(account);
-        }
-        return Accounts.get(idAccount);
     }
 
     public int getId() {

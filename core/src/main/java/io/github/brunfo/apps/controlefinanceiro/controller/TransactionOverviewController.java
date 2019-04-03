@@ -95,7 +95,7 @@ public class TransactionOverviewController implements OverviewController {
         if (transaction != null) {
             // Preenche as labels com informações do objeto transaction.
             idLabel.setText((String.valueOf((transaction.getId()))));
-            accountLabel.setText(transaction.getAccount().getName());
+            accountLabel.setText(mainApp.getAccounts().get(transaction.getAccountId()).getName());
             operationDateLabel.setText(String.valueOf(transaction.getOperationDate()));
             transactionDateLabel.setText(String.valueOf(transaction.getTransactionDate()));
             descriptionLabel.setText(transaction.getDescription());
@@ -136,7 +136,7 @@ public class TransactionOverviewController implements OverviewController {
     private void handleNewMovimento() {
         Transaction tempTransaction = new Transaction(0,
                 //TODO gerir criação de conta
-                null,//transactionTableView.getItems().get(0).getAccount(),
+                0,
                 LocalDate.now(),
                 LocalDate.now(),
                 "",
@@ -182,7 +182,7 @@ public class TransactionOverviewController implements OverviewController {
     }
 
     private boolean test(Transaction filter) {
-        return filter.getAccount().getId() == accountIdSelected;
+        return filter.getAccountId() == accountIdSelected;
     }
 
     private void updateData() {

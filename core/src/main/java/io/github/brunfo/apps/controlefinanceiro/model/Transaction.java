@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class Transaction {
 
     private final IntegerProperty id;
-    private final ObjectProperty<Account> account;
+    private final IntegerProperty accountId;
     private final ObjectProperty<LocalDate> operationDate;
     private final ObjectProperty<LocalDate> transactionDate;
     private final StringProperty description;
@@ -37,14 +37,14 @@ public class Transaction {
      * @param amount      Montante movimentado.
      */
     public Transaction(Integer id,
-                       Account account,
+                       Integer accountId,
                        LocalDate operationDate,
                        LocalDate transactionDate,
                        String description,
                        double amount) {
 
         this.id = new SimpleIntegerProperty(id);
-        this.account = new SimpleObjectProperty<>(account);
+        this.accountId = new SimpleIntegerProperty(accountId);
         this.operationDate = new SimpleObjectProperty<>(operationDate);
         this.transactionDate = new SimpleObjectProperty<>(transactionDate);
         this.description = new SimpleStringProperty(description);
@@ -63,20 +63,19 @@ public class Transaction {
         return id;
     }
 
-    public Account getAccount() {
-        return account.get();
+
+    public Integer getAccountId() {
+        return accountId.get();
     }
 
-    public void setAccount(String promptText) {
+    public void setAccountId(Integer accountId) {
+        this.accountId.set(accountId);
     }
 
-    public void setAccount(Account account) {
-        this.account.set(account);
+    public IntegerProperty accountIdProperty() {
+        return accountId;
     }
 
-    public ObjectProperty<Account> accountProperty() {
-        return account;
-    }
 
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public LocalDate getOperationDate() {
@@ -133,7 +132,7 @@ public class Transaction {
     public String toString() {
         return "Transaction{" +
                 "id=" + id +
-                ", account=" + account +
+                ", accountId=" + accountId +
                 ", operationDate=" + operationDate +
                 ", transactionDate=" + transactionDate +
                 ", description=" + description +

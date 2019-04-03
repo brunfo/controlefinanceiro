@@ -1,6 +1,7 @@
 package io.github.brunfo.apps.controlefinanceiro.dao;
 
 
+import io.github.brunfo.apps.controlefinanceiro.MainApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
 import io.github.brunfo.apps.controlefinanceiro.util.DateUtil;
@@ -18,6 +19,7 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
 
     private Properties dbProperties;
     private Connection dbConnection = null;
+    private MainApp mainApp = null;
 
     private ControleFinanceiroDaoImpletemtation() {
         setDBSystemDir();
@@ -164,7 +166,7 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
             while (resultSet.next()){
                 Transaction transaction =new Transaction(
                         resultSet.getInt("id"),
-                        Account.get(resultSet.getInt("idconta")),
+                        resultSet.getInt("idconta"),
                         DateUtil.parse(resultSet.getString("dataOp")),
                         DateUtil.parse(resultSet.getString("dataMov")),
                         resultSet.getString("descricao"),
@@ -218,7 +220,7 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
                             "WHERE ID = ?");
 
             stmtUpdateExistingRecord.clearParameters();
-            stmtUpdateExistingRecord.setInt(1, transaction.getAccount().getId());
+            stmtUpdateExistingRecord.setInt(1, transaction.getAccountId());
             stmtUpdateExistingRecord.setString(2, DateUtil.format(transaction.getOperationDate()));
             stmtUpdateExistingRecord.setString(3, DateUtil.format(transaction.getTransactionDate()));
             stmtUpdateExistingRecord.setString(4, transaction.getDescription());
@@ -246,7 +248,7 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
                             "VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewRecord.clearParameters();
-            stmtSaveNewRecord.setInt(1, transaction.getAccount().getId());
+            stmtSaveNewRecord.setInt(1, transaction.getAccountId());
             stmtSaveNewRecord.setString(2, DateUtil.format(transaction.getOperationDate()));
             stmtSaveNewRecord.setString(3, DateUtil.format(transaction.getTransactionDate()));
             stmtSaveNewRecord.setString(4, transaction.getDescription());

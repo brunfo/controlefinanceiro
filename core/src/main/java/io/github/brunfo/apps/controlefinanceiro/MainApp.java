@@ -4,7 +4,6 @@ import io.github.brunfo.apps.controlefinanceiro.controller.*;
 import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDao;
 import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDaoImpletemtation;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
-import io.github.brunfo.apps.controlefinanceiro.model.Accounts;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
 import io.github.brunfo.apps.controlefinanceiro.model.Transactions;
 import javafx.application.Application;
@@ -152,6 +151,7 @@ public class MainApp extends Application {
 
             // Define a pessoa no controller.
             EditDialogController controller = loader.getController();
+            controller.setMainApp(this);
             controller.setDialogStage(dialogStage);
             return controller;
         } catch (IOException e) {
@@ -275,13 +275,13 @@ public class MainApp extends Application {
         // dbHandler.saveAccount(new Account(0,"Habitação"));
         //Carrega da base de dados a lista de Accounts
 
-        Accounts.set(dbHandler.getAccounts());
+//        Accounts.set(dbHandler.getAccounts());
         //Carrega da base de dados a lista de Transactions
-        Transactions.set(dbHandler.getTransactions());
+//        Transactions.set(dbHandler.getTransactions());
 
         //passa os dados para a ObservableList
-        transactionsObservableList.addAll(Transactions.get());
-        accountsObservableList.addAll(Accounts.get());
+        transactionsObservableList.addAll(dbHandler.getTransactions());
+        accountsObservableList.addAll(dbHandler.getAccounts());
     }
 
     public void saveTransaction(Transaction transaction) {
@@ -296,7 +296,7 @@ public class MainApp extends Application {
         //TODO verificar se foi salva pelo retorno do id
         tempAccount.setId(id);
         getAccounts().add(tempAccount); //adiciona à observableList
-        Accounts.add(tempAccount); //adiciona às contas //TODO rever dupllicação de dados
+        // Accounts.add(tempAccount); //adiciona às contas //TODO rever dupllicação de dados
     }
 
     public void updateTransactionToDataBase(Transaction selectedTransaction) {

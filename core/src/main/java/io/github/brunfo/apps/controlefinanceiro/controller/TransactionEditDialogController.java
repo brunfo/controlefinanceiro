@@ -1,5 +1,6 @@
 package io.github.brunfo.apps.controlefinanceiro.controller;
 
+import io.github.brunfo.apps.controlefinanceiro.MainApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
 import io.github.brunfo.apps.controlefinanceiro.util.DateUtil;
@@ -29,6 +30,7 @@ public class TransactionEditDialogController implements EditDialogController {
     private Transaction transaction;
     private boolean okClicked = false;
     private int predefinedAccount;
+    private MainApp mainApp;
 
 
     /**
@@ -65,7 +67,7 @@ public class TransactionEditDialogController implements EditDialogController {
      */
     public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
-        accountComboBox.setValue(transaction.getAccount());
+        accountComboBox.setValue(mainApp.getAccounts().get(transaction.getAccountId()));
         operationDatePicker.setValue(transaction.getOperationDate());
         transactionDatePicker.setValue(transaction.getTransactionDate());
         descriptionTextField.setText(transaction.getDescription());
@@ -87,7 +89,7 @@ public class TransactionEditDialogController implements EditDialogController {
     @FXML
     private void handleOk() {
         if (isInputValid()) {
-            transaction.setAccount(accountComboBox.getValue());
+            transaction.setAccountId(accountComboBox.getValue().getId());
             transaction.setOperationDate(operationDatePicker.getValue());
             transaction.setTransactionDate(transactionDatePicker.getValue());
             transaction.setDescription(descriptionTextField.getText());
@@ -170,4 +172,8 @@ public class TransactionEditDialogController implements EditDialogController {
         predefinedAccount = index;
     }
 
+    @Override
+    public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
+    }
 }

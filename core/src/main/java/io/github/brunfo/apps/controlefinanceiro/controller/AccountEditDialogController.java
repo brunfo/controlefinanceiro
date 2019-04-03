@@ -1,12 +1,14 @@
 package io.github.brunfo.apps.controlefinanceiro.controller;
 
+import io.github.brunfo.apps.controlefinanceiro.MainApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
-import io.github.brunfo.apps.controlefinanceiro.model.Accounts;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.util.Objects;
 
 public class AccountEditDialogController implements EditDialogController{
 
@@ -19,6 +21,7 @@ public class AccountEditDialogController implements EditDialogController{
     private Stage dialogStage;
     private Account account;
     private boolean okClicked = false;
+    private MainApp mainApp;
 
 
     /**
@@ -98,8 +101,8 @@ public class AccountEditDialogController implements EditDialogController{
             errorMessage += "Nome inválido!\n";
         }
         //verifica se nome já está em uso
-        for (Account _account : Accounts.get()) {
-            if (nameTextField.getText().equalsIgnoreCase(_account.getName()))
+        for (Account _account : mainApp.getAccounts()) {
+            if (Objects.requireNonNull(nameTextField.getText()).equalsIgnoreCase(_account.getName()))
                 errorMessage = "Nome inválido, já em uso!\n";
         }
 
@@ -115,5 +118,11 @@ public class AccountEditDialogController implements EditDialogController{
 
             return false;
         }
+    }
+
+    @Override
+    public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
+
     }
 }
