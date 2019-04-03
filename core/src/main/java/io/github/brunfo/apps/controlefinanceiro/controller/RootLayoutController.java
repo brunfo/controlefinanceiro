@@ -40,7 +40,7 @@ public class RootLayoutController implements OverviewController {
      */
     @FXML
     private void handleTransactions() {
-        mainApp.showTransationsOverview();
+        mainApp.showTransactionsOverview();
     }
 
     @FXML
@@ -80,7 +80,7 @@ public class RootLayoutController implements OverviewController {
      */
     @FXML
     private void handleSave() {
-        File personFile = mainApp.getMovimentoFilePath();
+        File personFile = mainApp.getTransactionFilePath();
         if (personFile != null) {
             mainApp.saveTransactionDataToFile(personFile);
         } else {

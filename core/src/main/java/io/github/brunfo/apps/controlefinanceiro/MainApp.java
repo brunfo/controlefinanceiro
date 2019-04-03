@@ -67,7 +67,7 @@ public class MainApp extends Application {
 
         initRootLayout();
 
-        showTransationsOverview();
+        showTransactionsOverview();
 
     }
 
@@ -123,7 +123,7 @@ public class MainApp extends Application {
             //Define setup no centro do root layout
             rootLayout.setCenter(setup);
 
-            //Dá ao controlador aceeso à main app
+            //Dá ao controlador acesso à main app
             OverviewController controller = loader.getController();
             controller.setMainApp(this);
             return controller;
@@ -170,9 +170,9 @@ public class MainApp extends Application {
     /**
      * Mostra lista de movimentos
      */
-    public void showTransationsOverview() {
-        TransationOverviewController controller =
-                (TransationOverviewController) showOverview("/view/TransactionsOverview.fxml");
+    public void showTransactionsOverview() {
+        TransactionOverviewController controller =
+                (TransactionOverviewController) showOverview("/view/TransactionsOverview.fxml");
 
         if (controller != null) {
             //TODO cria ficheiro con preferencias de conta predefinida
@@ -193,7 +193,7 @@ public class MainApp extends Application {
      * @param selectedTransaction O objeto movimento a ser editado
      * @return true Se o usuário clicou OK,  caso contrário false.
      */
-    public boolean showTransationEditDialog(Transaction selectedTransaction) {
+    public boolean showTransactionEditDialog(Transaction selectedTransaction) {
         EditDialogController controller =
                 showEditDialog(
                         "/view/TransactionEditDialog.fxml",
@@ -237,13 +237,15 @@ public class MainApp extends Application {
                 showEditDialog(
                         "/view/AccountEditDialog.fxml",
                         "Editar conta");
+        if (controller!=null) {
+            ((AccountEditDialogController) controller).setAccount(selectedAccount);
 
-        ((AccountEditDialogController) controller).setAccount(selectedAccount);
+            // Mostra a janela e espera até o usuário fechar.
+            controller.getDialogStageStage().showAndWait();
 
-        // Mostra a janela e espera até o usuário fechar.
-        controller.getDialogStageStage().showAndWait();
-
-        return ((AccountEditDialogController) controller).isOkClicked();
+            return ((AccountEditDialogController) controller).isOkClicked();
+        }
+        return false;
     }
 //    /**
 //     * Abre uma janela para editar detalhes para a pessoa especificada. Se o usuário clicar
@@ -314,7 +316,7 @@ public class MainApp extends Application {
     public void saveTransaction(Transaction transaction) {
         int id = dbHandler.saveTransaction(transaction);
         transaction.setId(id);
-        getTransactionsObservableList().add(transaction);
+        getTransactions().add(transaction);
     }
 
     public void saveAccount(Account tempAccount) {
@@ -322,7 +324,7 @@ public class MainApp extends Application {
         int id = dbHandler.saveAccount(tempAccount);
         //TODO verificar se foi salva pelo retorno do id
         tempAccount.setId(id);
-        getAccountsObservableList().add(tempAccount);
+        getAccounts().add(tempAccount);
     }
 
     public void updateTransactionToDataBase(Transaction selectedTransaction) {
@@ -348,7 +350,7 @@ public class MainApp extends Application {
      *
      * @return Devolve ObservableList do dados de movimentos.
      */
-    public ObservableList<Transaction> getTransactionsObservableList() {
+    public ObservableList<Transaction> getTransactions() {
         return transactionsObservableList;
     }
 
@@ -357,7 +359,7 @@ public class MainApp extends Application {
      *
      * @return Devolve ObservableList do dados de movimentos.
      */
-    public ObservableList<Account> getAccountsObservableList() {
+    public ObservableList<Account> getAccounts() {
         return accountsObservableList;
     }
 
@@ -370,7 +372,7 @@ public class MainApp extends Application {
      *
      * @return
      */
-    public File getMovimentoFilePath() {
+    public File getTransactionFilePath() {
         Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
         String filePath = prefs.get("filePath", null);
         if (filePath != null) {
@@ -386,7 +388,7 @@ public class MainApp extends Application {
      *
      * @param file O arquivo ou null para remover o caminho
      */
-    private void setMovimentoFilePath(File file) {
+    private void setTransactionFilePath(File file) {
         Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
         if (file != null) {
             prefs.put("filePath", file.getPath());
@@ -420,7 +422,7 @@ public class MainApp extends Application {
             transactionsObservableList.addAll(Transactions.get());
 
             // Save the file path to the registry.
-            setMovimentoFilePath(file);
+            setTransactionFilePath(file);
 
         } catch (Exception e) { // catches ANY exception
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -452,7 +454,7 @@ public class MainApp extends Application {
             m.marshal(wrapper, file);
 
             // Saalva o caminho do arquivo no registro.
-            setMovimentoFilePath(file);
+            setTransactionFilePath(file);
         } catch (Exception e) { // catches ANY exception
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Não é possível salvar");

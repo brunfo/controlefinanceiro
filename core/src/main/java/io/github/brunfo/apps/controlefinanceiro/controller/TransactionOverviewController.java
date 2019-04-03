@@ -10,7 +10,7 @@ import javafx.scene.control.*;
 
 import java.time.LocalDate;
 
-public class TransationOverviewController implements OverviewController {
+public class TransactionOverviewController implements OverviewController {
 
 
     private static int lastEditedAccount = -1;
@@ -48,7 +48,7 @@ public class TransationOverviewController implements OverviewController {
      * O construtor.
      * O construtor é chamado antes do método inicialize().
      */
-    public TransationOverviewController() {
+    public TransactionOverviewController() {
     }
 
 
@@ -121,7 +121,7 @@ public class TransationOverviewController implements OverviewController {
         if (selectedIndex >= 0) {
             Transaction transaction = transactionTableView.getSelectionModel().getSelectedItem();
             mainApp.deleteTransactionFromDataBase(transaction);
-            //mainApp.getTransactionsObservableList().remove(transaction);
+            //mainApp.getTransactions().remove(transaction);
             transactionTableView.getItems().remove(selectedIndex);
         } else {
             noSelection();
@@ -141,7 +141,7 @@ public class TransationOverviewController implements OverviewController {
                 LocalDate.now(),
                 "",
                 0.0);
-        boolean okClicked = mainApp.showTransationEditDialog(tempTransaction);
+        boolean okClicked = mainApp.showTransactionEditDialog(tempTransaction);
         if (okClicked) {
             mainApp.saveTransaction(tempTransaction);
         }
@@ -155,7 +155,7 @@ public class TransationOverviewController implements OverviewController {
     private void handleEditTransaction() {
         Transaction selectedTransaction = transactionTableView.getSelectionModel().getSelectedItem();
         if (selectedTransaction != null) {
-            boolean okClicked = mainApp.showTransationEditDialog(selectedTransaction);
+            boolean okClicked = mainApp.showTransactionEditDialog(selectedTransaction);
             if (okClicked) {
                 showTransactionDetails(selectedTransaction);
                 mainApp.updateTransactionToDataBase(selectedTransaction);
@@ -185,7 +185,7 @@ public class TransationOverviewController implements OverviewController {
 
     private void updateData() {
         // Adiciona os dados da observable list na tabela
-        transactionTableView.setItems(mainApp.getTransactionsObservableList().filtered(this::test));
+        transactionTableView.setItems(mainApp.getTransactions().filtered(this::test));
     }
 
 

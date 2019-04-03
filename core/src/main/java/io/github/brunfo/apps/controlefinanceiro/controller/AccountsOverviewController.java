@@ -33,7 +33,7 @@ public class AccountsOverviewController implements OverviewController {
     @Override
     public void setMainApp(MainApp mainApp) {
         this.mainApp=mainApp;
-        accountTableView.setItems(mainApp.getAccountsObservableList());
+        accountTableView.setItems(mainApp.getAccounts());
     }
 
     @FXML
