@@ -37,7 +37,7 @@ public class AccountsOverviewController implements OverviewController {
     }
 
     @FXML
-    private void handleNewConta() {
+    private void handleNewAccount() {
         Account tempAccount = new Account();
         boolean okClicked = mainApp.showAccountEditDialog(tempAccount);
         if (okClicked) {
@@ -47,7 +47,7 @@ public class AccountsOverviewController implements OverviewController {
     }
 
     @FXML
-    private void handleEditConta() {
+    private void handleEditAccount() {
         Account selectedAccount = accountTableView.getSelectionModel().getSelectedItem();
         boolean okClicked = mainApp.showAccountEditDialog(selectedAccount);
         if (okClicked)
@@ -55,13 +55,13 @@ public class AccountsOverviewController implements OverviewController {
     }
 
     @FXML
-    private void handleDeleteConta() {
+    private void handleDeleteAccount() {
         Account account = accountTableView.getSelectionModel().getSelectedItem();
         if (account != null) {
             mainApp.deleteAccountFromDataBase(account);
             accountTableView.getItems().remove(account);
         } else {
-            nadaSelecionado();
+            noSelection();
         }
 
     }
@@ -69,7 +69,7 @@ public class AccountsOverviewController implements OverviewController {
     /**
      * Mensagem de erro quando nada está selecionado.
      */
-    private void nadaSelecionado() {
+    private void noSelection() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Nenhuma seleção");
         alert.setHeaderText("Nenhuma movimento selecionado");

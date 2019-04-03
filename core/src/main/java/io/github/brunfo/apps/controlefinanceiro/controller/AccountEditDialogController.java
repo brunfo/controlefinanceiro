@@ -1,6 +1,7 @@
 package io.github.brunfo.apps.controlefinanceiro.controller;
 
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
+import io.github.brunfo.apps.controlefinanceiro.model.Accounts;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -93,9 +94,13 @@ public class AccountEditDialogController implements EditDialogController{
     private boolean isInputValid() {
         String errorMessage = "";
 
-        //TODO verificar se já existe outra account com mesmo nameTextField
         if (nameTextField.getText() == null || nameTextField.getText().length() == 0) {
             errorMessage += "Nome inválido!\n";
+        }
+        //verifica se nome já está em uso
+        for (Account _account : Accounts.get()) {
+            if (nameTextField.getText().equalsIgnoreCase(_account.getName()))
+                errorMessage = "Nome inválido, já em uso!\n";
         }
 
         if (errorMessage.length() == 0) {

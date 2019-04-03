@@ -295,7 +295,8 @@ public class MainApp extends Application {
         int id = dbHandler.saveAccount(tempAccount);
         //TODO verificar se foi salva pelo retorno do id
         tempAccount.setId(id);
-        getAccounts().add(tempAccount);
+        getAccounts().add(tempAccount); //adiciona à observableList
+        Accounts.add(tempAccount); //adiciona às contas //TODO rever dupllicação de dados
     }
 
     public void updateTransactionToDataBase(Transaction selectedTransaction) {
