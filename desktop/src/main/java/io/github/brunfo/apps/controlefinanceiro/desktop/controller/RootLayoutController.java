@@ -1,6 +1,6 @@
-package io.github.brunfo.apps.controlefinanceiro.controller;
+package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
-import io.github.brunfo.apps.controlefinanceiro.MainApp;
+import io.github.brunfo.apps.controlefinanceiro.desktop.MainApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 

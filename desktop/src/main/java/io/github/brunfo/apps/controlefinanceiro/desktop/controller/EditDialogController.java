@@ -1,4 +1,4 @@
-package io.github.brunfo.apps.controlefinanceiro.controller;
+package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
 import javafx.stage.Stage;
 

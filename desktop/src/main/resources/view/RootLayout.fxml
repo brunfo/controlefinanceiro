@@ -7,7 +7,7 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
             prefWidth="1200.0" stylesheets="@../styles/LightBlueThem.css" xmlns="http://javafx.com/javafx/8.0.172-ea"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="io.github.brunfo.apps.controlefinanceiro.controller.RootLayoutController">
+            fx:controller="io.github.brunfo.apps.controlefinanceiro.desktop.controller.RootLayoutController">
     <left>
         <VBox prefHeight="600.0" prefWidth="215.0">
             <children>

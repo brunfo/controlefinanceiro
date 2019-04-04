@@ -1,7 +1,6 @@
 package io.github.brunfo.apps.controlefinanceiro.dao;
 
 
-import io.github.brunfo.apps.controlefinanceiro.MainApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
 import io.github.brunfo.apps.controlefinanceiro.util.DateUtil;
@@ -19,7 +18,6 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
 
     private Properties dbProperties;
     private Connection dbConnection = null;
-    private MainApp mainApp = null;
 
     private ControleFinanceiroDaoImpletemtation() {
         setDBSystemDir();

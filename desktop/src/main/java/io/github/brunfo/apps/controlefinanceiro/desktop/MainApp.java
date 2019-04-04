@@ -1,8 +1,8 @@
-package io.github.brunfo.apps.controlefinanceiro;
+package io.github.brunfo.apps.controlefinanceiro.desktop;
 
-import io.github.brunfo.apps.controlefinanceiro.controller.*;
 import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDao;
 import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDaoImpletemtation;
+import io.github.brunfo.apps.controlefinanceiro.desktop.controller.*;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
 import javafx.application.Application;
