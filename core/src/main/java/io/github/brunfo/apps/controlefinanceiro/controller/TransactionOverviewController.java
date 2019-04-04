@@ -173,7 +173,8 @@ public class TransactionOverviewController implements OverviewController {
     }
 
     @FXML
-    private void nextAccount() {
+    private void updateTableView() {
+        accountIdSelected = accountComboBox.getItems().get(0).getId();
         accountIdSelected = accountComboBox.getSelectionModel().getSelectedItem().getId();
         updateData();
     }
@@ -185,6 +186,7 @@ public class TransactionOverviewController implements OverviewController {
     private void updateData() {
         // Adiciona os dados da observable list na tabela
         transactionTableView.setItems(mainApp.getTransactions().filtered(this::test));
+        transactionTableView.getItems();
     }
 
 
@@ -206,6 +208,7 @@ public class TransactionOverviewController implements OverviewController {
         if (lastEditedAccount != -1) {
             accountComboBox.setValue((accountsData.get(lastEditedAccount)));
         }
+        updateTableView();
     }
 
     public void setPredefinedAccount(int index) {
