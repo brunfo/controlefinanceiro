@@ -12,8 +12,6 @@ import java.time.LocalDate;
 
 public class TransactionOverviewController implements OverviewController {
 
-
-    private static int lastEditedAccount = -1;
     @FXML
     private TableView<Transaction> transactionTableView;
     @FXML
@@ -40,9 +38,12 @@ public class TransactionOverviewController implements OverviewController {
     private Label operationDateLabel;
     @FXML
     private Label transactionDateLabel;
+
+    private static int lastEditedAccount = -1;
     private int predefinedAccount;
     private int accountIdSelected = 0;
     private MainApp mainApp;
+
 
     /**
      * O construtor.
@@ -58,7 +59,6 @@ public class TransactionOverviewController implements OverviewController {
      */
     @FXML
     private void initialize() {
-
         // Inicializa a tabela de movimentos.
         operationDateColumn.setCellValueFactory(
                 cellData -> cellData.getValue().operationDateProperty());
@@ -115,7 +115,6 @@ public class TransactionOverviewController implements OverviewController {
             descriptionLabel.setText("");
             amountLabel.setText("");
         }
-
     }
 
     /**
@@ -159,10 +158,8 @@ public class TransactionOverviewController implements OverviewController {
                 showTransactionDetails(selectedTransaction);
                 mainApp.updateTransactionToDataBase(selectedTransaction);
             }
-
         } else {
             noSelection();
-
         }
     }
 
@@ -173,7 +170,8 @@ public class TransactionOverviewController implements OverviewController {
     }
 
     @FXML
-    private void nextAccount() {
+    private void updateTableView() {
+        accountIdSelected = accountComboBox.getItems().get(0).getId();
         accountIdSelected = accountComboBox.getSelectionModel().getSelectedItem().getId();
         updateData();
     }
@@ -185,6 +183,7 @@ public class TransactionOverviewController implements OverviewController {
     private void updateData() {
         // Adiciona os dados da observable list na tabela
         transactionTableView.setItems(mainApp.getTransactions().filtered(this::test));
+        transactionTableView.getItems();
     }
 
 
@@ -206,6 +205,7 @@ public class TransactionOverviewController implements OverviewController {
         if (lastEditedAccount != -1) {
             accountComboBox.setValue((accountsData.get(lastEditedAccount)));
         }
+        updateTableView();
     }
 
     public void setPredefinedAccount(int index) {

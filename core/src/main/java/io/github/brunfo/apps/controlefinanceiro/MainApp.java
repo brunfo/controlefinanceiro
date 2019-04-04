@@ -61,7 +61,6 @@ public class MainApp extends Application {
         initRootLayout();
 
         showTransactionsOverview();
-
     }
 
     // ********** Configurações ***********//
@@ -266,13 +265,6 @@ public class MainApp extends Application {
      * Carrega dados da base de dados.
      */
     private void loadFromDataBase() {
-        // dbHandler.saveAccount(new Account(0,"Habitação"));
-        //Carrega da base de dados a lista de Accounts
-
-//        Accounts.set(dbHandler.getAccounts());
-        //Carrega da base de dados a lista de Transactions
-//        Transactions.set(dbHandler.getTransactions());
-
         //passa os dados para a ObservableList
         transactionsObservableList.addAll(dbHandler.getTransactions());
         accountsObservableList.addAll(dbHandler.getAccounts());

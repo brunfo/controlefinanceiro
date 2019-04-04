@@ -115,7 +115,6 @@ public class AccountEditDialogController implements EditDialogController{
             alert.setHeaderText("Por favor, corrija os campos inválidos");
             alert.setContentText(errorMessage);
             alert.showAndWait();
-
             return false;
         }
     }
