@@ -4,17 +4,17 @@ import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
 
 public interface MainController {
-    void loadFromDataBase();
+    void getData();
 
     void saveTransaction(Transaction tempTransaction);
 
     void saveAccount(Account tempAccount);
 
-    void updateTransactionToDataBase(Transaction selectedTransaction);
+    void updateTransaction(Transaction selectedTransaction);
 
     void updateAccount(Account selectedAccount);
 
-    void deleteTransactionFromDataBase(Transaction selectedTransaction);
+    void deleteTransaction(Transaction selectedTransaction);
 
-    void deleteAccountFromDataBase(Account selectedAccount);
+    void deleteAccount(Account selectedAccount);
 }

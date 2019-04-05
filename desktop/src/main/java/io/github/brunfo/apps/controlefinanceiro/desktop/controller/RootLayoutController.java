@@ -1,5 +1,7 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
+import io.github.brunfo.apps.controlefinanceiro.controller.MainController;
+import io.github.brunfo.apps.controlefinanceiro.controller.OverviewController;
 import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -137,7 +139,7 @@ public class RootLayoutController implements OverviewController {
     }
 
     @Override
-    public void setDesktopApp(DesktopApp desktopApp) {
-        this.desktopApp = desktopApp;
+    public void setMainController(MainController controller) {
+        this.desktopApp = (DesktopApp) controller;
     }
 }
