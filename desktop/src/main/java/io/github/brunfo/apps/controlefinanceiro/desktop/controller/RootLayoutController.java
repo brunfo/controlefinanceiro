@@ -1,6 +1,6 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
-import io.github.brunfo.apps.controlefinanceiro.desktop.MainApp;
+import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 
@@ -14,14 +14,14 @@ import javafx.scene.control.Alert;
  */
 public class RootLayoutController implements OverviewController {
 
-    private MainApp mainApp;
+    private DesktopApp desktopApp;
 
     /**
      * Abre o DashBoard
      */
     @FXML
     private void handleDashBoard() {
-        mainApp.showDashBoard();
+        desktopApp.showDashBoard();
     }
 
     /**
@@ -29,7 +29,7 @@ public class RootLayoutController implements OverviewController {
      */
     @FXML
     private void handleAccounts() {
-        mainApp.showAccountsOverview();
+        desktopApp.showAccountsOverview();
     }
 
     /**
@@ -37,17 +37,17 @@ public class RootLayoutController implements OverviewController {
      */
     @FXML
     private void handleTransactions() {
-        mainApp.showTransactionsOverview();
+        desktopApp.showTransactionsOverview();
     }
 
     @FXML
     private void handleSetup() {
-        mainApp.showSetup();
+        desktopApp.showSetup();
     }
 
     @FXML
     private void handleBudget() {
-        mainApp.showBudget();
+        desktopApp.showBudget();
     }
 
 
@@ -64,10 +64,10 @@ public class RootLayoutController implements OverviewController {
 //        fileChooser.getExtensionFilters().add(extFilter);
 //
 //        // Mostra a janela de salvar arquivo
-//        File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+//        File file = fileChooser.showOpenDialog(desktopApp.getPrimaryStage());
 //
 //        if (file != null) {
-//            mainApp.loadTransactionDataFromFile(file);
+//            desktopApp.loadTransactionDataFromFile(file);
 //        }
     }
 
@@ -77,9 +77,9 @@ public class RootLayoutController implements OverviewController {
      */
     @FXML
     private void handleSave() {
-//        File personFile = mainApp.getTransactionFilePath();
+//        File personFile = desktopApp.getTransactionFilePath();
 //        if (personFile != null) {
-//            mainApp.saveTransactionDataToFile(personFile);
+//            desktopApp.saveTransactionDataToFile(personFile);
 //        } else {
 //            handleSaveAs();
 //        }
@@ -98,14 +98,14 @@ public class RootLayoutController implements OverviewController {
 //        fileChooser.getExtensionFilters().add(extFilter);
 //
 //        // Mostra a janela para salvar arquivo
-//        File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+//        File file = fileChooser.showSaveDialog(desktopApp.getPrimaryStage());
 //
 //        if (file != null) {
 //            // Certifica de que esta é a extensão correta
 //            if (!file.getPath().endsWith(".xml")) {
 //                file = new File(file.getPath() + ".xml");
 //            }
-//            mainApp.saveTransactionDataToFile(file);
+//            desktopApp.saveTransactionDataToFile(file);
 //        }
     }
 
@@ -115,9 +115,9 @@ public class RootLayoutController implements OverviewController {
     @FXML
     private void handleAbout() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(mainApp.TITLE);
+        alert.setTitle(desktopApp.TITLE);
         alert.setHeaderText("Sobre");
-        alert.setContentText("Version : " + mainApp.VERSION +
+        alert.setContentText("Version : " + desktopApp.VERSION +
                 " \nAutor: Bruno Rego\nWebsite: http://brunfo.github.io\n");
         alert.showAndWait();
     }
@@ -128,7 +128,7 @@ public class RootLayoutController implements OverviewController {
     @FXML
     private void handleExit() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(mainApp.TITLE);
+        alert.setTitle(desktopApp.TITLE);
         alert.setHeaderText("Sair");
         alert.setContentText("Tem a certeza que quer sair?");
         if (alert.showAndWait().get().getButtonData().isDefaultButton()) {
@@ -137,7 +137,7 @@ public class RootLayoutController implements OverviewController {
     }
 
     @Override
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
+    public void setDesktopApp(DesktopApp desktopApp) {
+        this.desktopApp = desktopApp;
     }
 }

@@ -1,6 +1,6 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
-import io.github.brunfo.apps.controlefinanceiro.desktop.MainApp;
+import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
 import io.github.brunfo.apps.controlefinanceiro.util.DateUtil;
@@ -30,7 +30,7 @@ public class TransactionEditDialogController implements EditDialogController {
     private Transaction transaction;
     private boolean okClicked = false;
     private int predefinedAccount;
-    private MainApp mainApp;
+    private DesktopApp desktopApp;
 
 
     /**
@@ -67,7 +67,7 @@ public class TransactionEditDialogController implements EditDialogController {
      */
     public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
-        accountComboBox.setValue(mainApp.getAccounts().get(transaction.getAccountId()));
+        accountComboBox.setValue(desktopApp.getAccounts().get(transaction.getAccountId()));
         operationDatePicker.setValue(transaction.getOperationDate());
         transactionDatePicker.setValue(transaction.getTransactionDate());
         descriptionTextField.setText(transaction.getDescription());
@@ -173,7 +173,7 @@ public class TransactionEditDialogController implements EditDialogController {
     }
 
     @Override
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
+    public void setDesktopApp(DesktopApp desktopApp) {
+        this.desktopApp = desktopApp;
     }
 }

@@ -1,14 +1,14 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
 
-import io.github.brunfo.apps.controlefinanceiro.desktop.MainApp;
+import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
 
 public class BudgetController implements OverviewController {
 
-    private MainApp mainApp;
+    private DesktopApp desktopApp;
 
     @Override
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp= mainApp;
+    public void setDesktopApp(DesktopApp desktopApp) {
+        this.desktopApp = desktopApp;
     }
 }

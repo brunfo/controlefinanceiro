@@ -1,6 +1,6 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
-import io.github.brunfo.apps.controlefinanceiro.desktop.MainApp;
+import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -16,7 +16,7 @@ public class AccountsOverviewController implements OverviewController {
     private TableColumn<Account, String> nameColumn;
     @FXML
     private TableColumn<Account, Integer> idColumn;
-    private MainApp mainApp;
+    private DesktopApp desktopApp;
 
     @FXML
     void initialize() {
@@ -28,20 +28,20 @@ public class AccountsOverviewController implements OverviewController {
     /**
      * É chamado pela aplicação principal para referenciar a si mesma.
      *
-     * @param mainApp
+     * @param desktopApp
      */
     @Override
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-        accountTableView.setItems(mainApp.getAccounts());
+    public void setDesktopApp(DesktopApp desktopApp) {
+        this.desktopApp = desktopApp;
+        accountTableView.setItems(desktopApp.getAccounts());
     }
 
     @FXML
     private void handleNewAccount() {
         Account tempAccount = new Account();
-        boolean okClicked = mainApp.showAccountEditDialog(tempAccount);
+        boolean okClicked = desktopApp.showAccountEditDialog(tempAccount);
         if (okClicked) {
-            mainApp.saveAccount(tempAccount);
+            desktopApp.saveAccount(tempAccount);
         }
     }
 
@@ -49,9 +49,9 @@ public class AccountsOverviewController implements OverviewController {
     private void handleEditAccount() {
         Account selectedAccount = accountTableView.getSelectionModel().getSelectedItem();
         if (selectedAccount != null) {
-            boolean okClicked = mainApp.showAccountEditDialog(selectedAccount);
+            boolean okClicked = desktopApp.showAccountEditDialog(selectedAccount);
             if (okClicked)
-                mainApp.updateAccount(selectedAccount);
+                desktopApp.updateAccount(selectedAccount);
         } else {
             noSelection();
         }
@@ -61,7 +61,7 @@ public class AccountsOverviewController implements OverviewController {
     private void handleDeleteAccount() {
         Account account = accountTableView.getSelectionModel().getSelectedItem();
         if (account != null) {
-            mainApp.deleteAccountFromDataBase(account);
+            desktopApp.deleteAccountFromDataBase(account);
             accountTableView.getItems().remove(account);
         } else {
             noSelection();

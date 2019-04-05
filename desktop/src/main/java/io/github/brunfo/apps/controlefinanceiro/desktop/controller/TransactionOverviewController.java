@@ -1,6 +1,6 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
-import io.github.brunfo.apps.controlefinanceiro.desktop.MainApp;
+import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
 import javafx.collections.ListChangeListener;
@@ -42,7 +42,7 @@ public class TransactionOverviewController implements OverviewController {
     private static int lastEditedAccount = -1;
     private int predefinedAccount;
     private int accountIdSelected = 0;
-    private MainApp mainApp;
+    private DesktopApp desktopApp;
 
 
     /**
@@ -78,10 +78,10 @@ public class TransactionOverviewController implements OverviewController {
     /**
      * É chamado pela aplicação principal para dar uma referência de volta a si mesmo.
      *
-     * @param mainApp
+     * @param desktopApp
      */
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp =mainApp;
+    public void setDesktopApp(DesktopApp desktopApp) {
+        this.desktopApp = desktopApp;
         updateData();
     }
 
@@ -96,7 +96,7 @@ public class TransactionOverviewController implements OverviewController {
             // Preenche as labels com informações do objeto transaction.
             idLabel.setText((String.valueOf((transaction.getId()))));
             String accountName = null;
-            for (Account p : mainApp.getAccounts()) {
+            for (Account p : desktopApp.getAccounts()) {
                 if (p.getId() == transaction.getAccountId()) {
                     accountName = p.getName();
                 }
@@ -125,7 +125,7 @@ public class TransactionOverviewController implements OverviewController {
         int selectedIndex = transactionTableView.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
             Transaction transaction = transactionTableView.getSelectionModel().getSelectedItem();
-            mainApp.deleteTransactionFromDataBase(transaction);
+            desktopApp.deleteTransactionFromDataBase(transaction);
             transactionTableView.getItems().remove(selectedIndex);
         } else {
             noSelection();
@@ -139,9 +139,9 @@ public class TransactionOverviewController implements OverviewController {
     @FXML
     private void handleNewTransaction() {
         Transaction tempTransaction = new Transaction();
-        boolean okClicked = mainApp.showTransactionEditDialog(tempTransaction);
+        boolean okClicked = desktopApp.showTransactionEditDialog(tempTransaction);
         if (okClicked) {
-            mainApp.saveTransaction(tempTransaction);
+            desktopApp.saveTransaction(tempTransaction);
         }
     }
 
@@ -153,10 +153,10 @@ public class TransactionOverviewController implements OverviewController {
     private void handleEditTransaction() {
         Transaction selectedTransaction = transactionTableView.getSelectionModel().getSelectedItem();
         if (selectedTransaction != null) {
-            boolean okClicked = mainApp.showTransactionEditDialog(selectedTransaction);
+            boolean okClicked = desktopApp.showTransactionEditDialog(selectedTransaction);
             if (okClicked) {
                 showTransactionDetails(selectedTransaction);
-                mainApp.updateTransactionToDataBase(selectedTransaction);
+                desktopApp.updateTransactionToDataBase(selectedTransaction);
             }
         } else {
             noSelection();
@@ -182,7 +182,7 @@ public class TransactionOverviewController implements OverviewController {
 
     private void updateData() {
         // Adiciona os dados da observable list na tabela
-        transactionTableView.setItems(mainApp.getTransactions().filtered(this::test));
+        transactionTableView.setItems(desktopApp.getTransactions().filtered(this::test));
         transactionTableView.getItems();
     }
 

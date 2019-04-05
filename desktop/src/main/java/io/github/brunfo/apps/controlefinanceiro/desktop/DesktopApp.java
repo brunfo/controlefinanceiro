@@ -1,5 +1,6 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop;
 
+import io.github.brunfo.apps.controlefinanceiro.controller.MainController;
 import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDao;
 import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDaoImpletemtation;
 import io.github.brunfo.apps.controlefinanceiro.desktop.controller.*;
@@ -24,7 +25,7 @@ import java.io.IOException;
  * como também de controller de toda a App.
  * Toda a gestão de vistas como de dados tem de passar por esta classe.
  */
-public class MainApp extends Application {
+public class DesktopApp extends Application implements MainController {
 
     //database handler
     private static ControleFinanceiroDao dbHandler = ControleFinanceiroDaoImpletemtation.getInstance();
@@ -41,7 +42,7 @@ public class MainApp extends Application {
     /**
      * Construtor
      */
-    public MainApp() {
+    public DesktopApp() {
 
     }
 
@@ -84,7 +85,7 @@ public class MainApp extends Application {
         try {
             // Carrega o root layout do arquivo fxml.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class
+            loader.setLocation(DesktopApp.class
                     .getResource("/view/RootLayout.fxml"));
             rootLayout = loader.load();
 
@@ -94,7 +95,7 @@ public class MainApp extends Application {
 
             // Dá ao controller o acesso ao main app.
             RootLayoutController controller = loader.getController();
-            controller.setMainApp(this);
+            controller.setDesktopApp(this);
 
             primaryStage.show();
         } catch (IOException e) {
@@ -109,7 +110,7 @@ public class MainApp extends Application {
         try {
             //Carrega o setup
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource(overview));
+            loader.setLocation(DesktopApp.class.getResource(overview));
             AnchorPane setup = loader.load();
 
             //Define setup no centro do root layout
@@ -117,7 +118,7 @@ public class MainApp extends Application {
 
             //Dá ao controlador acesso à main app
             OverviewController controller = loader.getController();
-            controller.setMainApp(this);
+            controller.setDesktopApp(this);
             return controller;
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,7 +131,7 @@ public class MainApp extends Application {
         try {
             // Carrega o arquivo fxml e cria um novo stage para a janela popup.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource(editDialog));
+            loader.setLocation(DesktopApp.class.getResource(editDialog));
             AnchorPane page = loader.load();
 
             // Cria o palco dialogStage.
@@ -144,7 +145,7 @@ public class MainApp extends Application {
 
             // Define a pessoa no controller.
             EditDialogController controller = loader.getController();
-            controller.setMainApp(this);
+            controller.setDesktopApp(this);
             controller.setDialogStage(dialogStage);
             return controller;
         } catch (IOException e) {
@@ -264,18 +265,21 @@ public class MainApp extends Application {
     /**
      * Carrega dados da base de dados.
      */
-    private void loadFromDataBase() {
+    @Override
+    public void loadFromDataBase() {
         //passa os dados para a ObservableList
         transactionsObservableList.addAll(dbHandler.getTransactions());
         accountsObservableList.addAll(dbHandler.getAccounts());
     }
 
+    @Override
     public void saveTransaction(Transaction tempTransaction) {
         int id = dbHandler.saveTransaction(tempTransaction);
         tempTransaction.setId(id);
         getTransactions().add(tempTransaction);
     }
 
+    @Override
     public void saveAccount(Account tempAccount) {
         //save to database and get id
         int id = dbHandler.saveAccount(tempAccount);
@@ -284,18 +288,22 @@ public class MainApp extends Application {
         getAccounts().add(tempAccount); //adiciona à observableList
     }
 
+    @Override
     public void updateTransactionToDataBase(Transaction selectedTransaction) {
         dbHandler.editTransaction(selectedTransaction);
     }
 
+    @Override
     public void updateAccount(Account selectedAccount) {
         dbHandler.editAccount(selectedAccount);
     }
 
+    @Override
     public void deleteTransactionFromDataBase(Transaction selectedTransaction) {
         dbHandler.deleteTransaction(selectedTransaction.getId());
     }
 
+    @Override
     public void deleteAccountFromDataBase(Account selectedAccount) {
         dbHandler.deleteAccount(selectedAccount.getId());
     }
@@ -330,7 +338,7 @@ public class MainApp extends Application {
 //     * @return
 //     */
 //    public File getTransactionFilePath() {
-//        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+//        Preferences prefs = Preferences.userNodeForPackage(DesktopApp.class);
 //        String filePath = prefs.get("filePath", null);
 //        if (filePath != null) {
 //            return new File(filePath);
@@ -346,7 +354,7 @@ public class MainApp extends Application {
 //     * @param file O arquivo ou null para remover o caminho
 //     */
 //    private void setTransactionFilePath(File file) {
-//        Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
+//        Preferences prefs = Preferences.userNodeForPackage(DesktopApp.class);
 //        if (file != null) {
 //            prefs.put("filePath", file.getPath());
 //
