@@ -1,5 +1,7 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
+import io.github.brunfo.apps.controlefinanceiro.controller.MainController;
+import io.github.brunfo.apps.controlefinanceiro.controller.OverviewController;
 import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import javafx.fxml.FXML;
@@ -28,12 +30,12 @@ public class AccountsOverviewController implements OverviewController {
     /**
      * É chamado pela aplicação principal para referenciar a si mesma.
      *
-     * @param desktopApp
+     * @param controller
      */
     @Override
-    public void setDesktopApp(DesktopApp desktopApp) {
-        this.desktopApp = desktopApp;
-        accountTableView.setItems(desktopApp.getAccounts());
+    public void setMainController(MainController controller) {
+        this.desktopApp = (DesktopApp) controller;
+        accountTableView.setItems(this.desktopApp.getAccounts());
     }
 
     @FXML
@@ -61,7 +63,7 @@ public class AccountsOverviewController implements OverviewController {
     private void handleDeleteAccount() {
         Account account = accountTableView.getSelectionModel().getSelectedItem();
         if (account != null) {
-            desktopApp.deleteAccountFromDataBase(account);
+            desktopApp.deleteAccount(account);
             accountTableView.getItems().remove(account);
         } else {
             noSelection();

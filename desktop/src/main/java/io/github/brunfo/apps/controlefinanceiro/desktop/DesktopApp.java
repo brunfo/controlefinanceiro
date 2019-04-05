@@ -1,6 +1,7 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop;
 
 import io.github.brunfo.apps.controlefinanceiro.controller.MainController;
+import io.github.brunfo.apps.controlefinanceiro.controller.OverviewController;
 import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDao;
 import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDaoImpletemtation;
 import io.github.brunfo.apps.controlefinanceiro.desktop.controller.*;
@@ -95,14 +96,14 @@ public class DesktopApp extends Application implements MainController {
 
             // Dá ao controller o acesso ao main app.
             RootLayoutController controller = loader.getController();
-            controller.setDesktopApp(this);
+            controller.setMainController(this);
 
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
         //Carega os dados da base dados
-        loadFromDataBase();
+        getData();
     }
 
 
@@ -118,7 +119,7 @@ public class DesktopApp extends Application implements MainController {
 
             //Dá ao controlador acesso à main app
             OverviewController controller = loader.getController();
-            controller.setDesktopApp(this);
+            controller.setMainController(this);
             return controller;
         } catch (IOException e) {
             e.printStackTrace();
@@ -145,7 +146,7 @@ public class DesktopApp extends Application implements MainController {
 
             // Define a pessoa no controller.
             EditDialogController controller = loader.getController();
-            controller.setDesktopApp(this);
+            controller.setMainController(this);
             controller.setDialogStage(dialogStage);
             return controller;
         } catch (IOException e) {
@@ -266,7 +267,7 @@ public class DesktopApp extends Application implements MainController {
      * Carrega dados da base de dados.
      */
     @Override
-    public void loadFromDataBase() {
+    public void getData() {
         //passa os dados para a ObservableList
         transactionsObservableList.addAll(dbHandler.getTransactions());
         accountsObservableList.addAll(dbHandler.getAccounts());
@@ -289,7 +290,7 @@ public class DesktopApp extends Application implements MainController {
     }
 
     @Override
-    public void updateTransactionToDataBase(Transaction selectedTransaction) {
+    public void updateTransaction(Transaction selectedTransaction) {
         dbHandler.editTransaction(selectedTransaction);
     }
 
@@ -299,12 +300,12 @@ public class DesktopApp extends Application implements MainController {
     }
 
     @Override
-    public void deleteTransactionFromDataBase(Transaction selectedTransaction) {
+    public void deleteTransaction(Transaction selectedTransaction) {
         dbHandler.deleteTransaction(selectedTransaction.getId());
     }
 
     @Override
-    public void deleteAccountFromDataBase(Account selectedAccount) {
+    public void deleteAccount(Account selectedAccount) {
         dbHandler.deleteAccount(selectedAccount.getId());
     }
 

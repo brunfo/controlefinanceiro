@@ -1,5 +1,7 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
+import io.github.brunfo.apps.controlefinanceiro.controller.MainController;
+import io.github.brunfo.apps.controlefinanceiro.controller.OverviewController;
 import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
@@ -78,10 +80,11 @@ public class TransactionOverviewController implements OverviewController {
     /**
      * É chamado pela aplicação principal para dar uma referência de volta a si mesmo.
      *
-     * @param desktopApp
+     * @param controller
      */
-    public void setDesktopApp(DesktopApp desktopApp) {
-        this.desktopApp = desktopApp;
+    @Override
+    public void setMainController(MainController controller) {
+        this.desktopApp = (DesktopApp) controller;
         updateData();
     }
 
@@ -125,7 +128,7 @@ public class TransactionOverviewController implements OverviewController {
         int selectedIndex = transactionTableView.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
             Transaction transaction = transactionTableView.getSelectionModel().getSelectedItem();
-            desktopApp.deleteTransactionFromDataBase(transaction);
+            desktopApp.deleteTransaction(transaction);
             transactionTableView.getItems().remove(selectedIndex);
         } else {
             noSelection();
@@ -156,7 +159,7 @@ public class TransactionOverviewController implements OverviewController {
             boolean okClicked = desktopApp.showTransactionEditDialog(selectedTransaction);
             if (okClicked) {
                 showTransactionDetails(selectedTransaction);
-                desktopApp.updateTransactionToDataBase(selectedTransaction);
+                desktopApp.updateTransaction(selectedTransaction);
             }
         } else {
             noSelection();

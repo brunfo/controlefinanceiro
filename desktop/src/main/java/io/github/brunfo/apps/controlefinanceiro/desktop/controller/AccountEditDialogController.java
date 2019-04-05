@@ -1,5 +1,6 @@
 package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
 
+import io.github.brunfo.apps.controlefinanceiro.controller.MainController;
 import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
 import io.github.brunfo.apps.controlefinanceiro.model.Account;
 import javafx.fxml.FXML;
@@ -120,8 +121,8 @@ public class AccountEditDialogController implements EditDialogController{
     }
 
     @Override
-    public void setDesktopApp(DesktopApp desktopApp) {
-        this.desktopApp = desktopApp;
+    public void setMainController(MainController controller) {
+        this.desktopApp = (DesktopApp) controller;
 
     }
 }
