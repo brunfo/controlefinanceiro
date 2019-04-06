@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/LightBlueThem.css"
             xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="io.github.brunfo.apps.controlefinanceiro.desktop.controller.SetupController">
+            fx:controller="io.github.brunfo.apps.personalbudget.desktop.controller.SetupController">
     <children>
         <Label layoutX="179.0" layoutY="192.0" text="Configurações ainda não implementado" textAlignment="CENTER"/>
     </children>

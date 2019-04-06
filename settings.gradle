@@ -15,7 +15,7 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'ControleFinanceiro'
+rootProject.name = 'PersonalBuget'
 include 'desktop'
 include 'core'
 
