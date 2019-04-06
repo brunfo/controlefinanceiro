@@ -14,7 +14,7 @@ public class TestAccounts {
         Transaction transaction = new Transaction();
         transaction.setAmount(15.5);
         transaction.setDescription("movimento 1");
-        transaction.setAccountId(2);
+        transaction.setAccountId(1);
         addTransaction(transaction);
 
         transaction = new Transaction();
@@ -32,7 +32,7 @@ public class TestAccounts {
         transaction = new Transaction();
         transaction.setAmount(-28.0);
         transaction.setDescription("movimento 4");
-        transaction.setAccountId(3);
+        transaction.setAccountId(2);
         addTransaction(transaction);
 
         transaction = new Transaction();
@@ -41,6 +41,7 @@ public class TestAccounts {
         transaction.setAccountId(3);
         removeTransaction(transaction);
 
+        printAccountTransactions(controller.getAccount("Conta 1"));
         printAccountTransactions(controller.getAccount("Conta 2"));
 
     }

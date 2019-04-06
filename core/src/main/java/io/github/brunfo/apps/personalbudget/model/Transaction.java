@@ -127,7 +127,6 @@ public class Transaction {
         this.balance.setValue(balance);
     }
 
-
     @Override
     public String toString() {
         return "Transaction{" +

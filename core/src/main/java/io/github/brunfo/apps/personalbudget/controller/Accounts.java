@@ -41,8 +41,9 @@ class Accounts {
     /**
      * Adds a transaction to a existing account
      *
-     * @param tempTransaction
-     * @return
+     * @param tempTransaction transaction to add.
+     * @return true if success.
+     * @throws Exception throws an error id the account does not exists.
      */
     boolean addTransaction(Transaction tempTransaction) throws Exception {
         Account account = getAccountById(tempTransaction.getAccountId());
@@ -65,6 +66,7 @@ class Accounts {
      *
      * @param transaction to be removed.
      * @return true or false. If transaction does not exists in the account, return false.
+     * @throws Exception throws an error id the account does not exists.
      */
     boolean removeTransaction(Transaction transaction) throws Exception {
         Account account = getAccountById(transaction.getAccountId());
@@ -76,6 +78,13 @@ class Accounts {
         return false;
     }
 
+    /**
+     * Checks if a account exists.
+     *
+     * @param account account to check.
+     * @return true if exists
+     * @throws Exception throws an error if the account does not exists.
+     */
     boolean isAccountValid(Account account) throws Exception {
         if (account != null) {
             return true;
