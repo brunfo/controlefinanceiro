@@ -1,11 +1,11 @@
-package io.github.brunfo.apps.controlefinanceiro.dao;
+package io.github.brunfo.apps.personalbudget.dao;
 
-import io.github.brunfo.apps.controlefinanceiro.model.Account;
-import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
+import io.github.brunfo.apps.personalbudget.model.Account;
+import io.github.brunfo.apps.personalbudget.model.Transaction;
 
 import java.util.List;
 
-public interface ControleFinanceiroDao {
+public interface PersonalBudgetDao {
 
     List<Transaction> getTransactions();
 

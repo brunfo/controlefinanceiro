@@ -1,4 +1,4 @@
-package io.github.brunfo.apps.controlefinanceiro.controller;
+package io.github.brunfo.apps.personalbudget.controller;
 
 
 public interface OverviewController {
@@ -9,5 +9,5 @@ public interface OverviewController {
      * @param controller
      */
     void setMainController(MainController controller);
-    }
+}
 

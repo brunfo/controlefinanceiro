@@ -1,12 +1,12 @@
-package io.github.brunfo.apps.controlefinanceiro.desktop;
+package io.github.brunfo.apps.personalbudget.desktop;
 
-import io.github.brunfo.apps.controlefinanceiro.controller.MainController;
-import io.github.brunfo.apps.controlefinanceiro.controller.OverviewController;
-import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDao;
-import io.github.brunfo.apps.controlefinanceiro.dao.ControleFinanceiroDaoImpletemtation;
-import io.github.brunfo.apps.controlefinanceiro.desktop.controller.*;
-import io.github.brunfo.apps.controlefinanceiro.model.Account;
-import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
+import io.github.brunfo.apps.personalbudget.controller.MainController;
+import io.github.brunfo.apps.personalbudget.controller.OverviewController;
+import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDao;
+import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDaoImplementation;
+import io.github.brunfo.apps.personalbudget.desktop.controller.*;
+import io.github.brunfo.apps.personalbudget.model.Account;
+import io.github.brunfo.apps.personalbudget.model.Transaction;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,8 +29,8 @@ import java.io.IOException;
 public class DesktopApp extends Application implements MainController {
 
     //database handler
-    private static ControleFinanceiroDao dbHandler = ControleFinanceiroDaoImpletemtation.getInstance();
-    public final String TITLE = "Controle Financeiro";
+    private static PersonalBudgetDao dbHandler = PersonalBudgetDaoImplementation.getInstance();
+    public final String TITLE = "Personal Budget";
     public final String VERSION = "1.1-SNAPSHOT";
     private Stage primaryStage;
     private BorderPane rootLayout;

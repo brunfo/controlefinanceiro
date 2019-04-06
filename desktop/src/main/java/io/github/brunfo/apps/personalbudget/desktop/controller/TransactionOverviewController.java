@@ -1,10 +1,10 @@
-package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
+package io.github.brunfo.apps.personalbudget.desktop.controller;
 
-import io.github.brunfo.apps.controlefinanceiro.controller.MainController;
-import io.github.brunfo.apps.controlefinanceiro.controller.OverviewController;
-import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
-import io.github.brunfo.apps.controlefinanceiro.model.Account;
-import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
+import io.github.brunfo.apps.personalbudget.controller.MainController;
+import io.github.brunfo.apps.personalbudget.controller.OverviewController;
+import io.github.brunfo.apps.personalbudget.desktop.DesktopApp;
+import io.github.brunfo.apps.personalbudget.model.Account;
+import io.github.brunfo.apps.personalbudget.model.Transaction;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,6 +14,7 @@ import java.time.LocalDate;
 
 public class TransactionOverviewController implements OverviewController {
 
+    private static int lastEditedAccount = -1;
     @FXML
     private TableView<Transaction> transactionTableView;
     @FXML
@@ -40,8 +41,6 @@ public class TransactionOverviewController implements OverviewController {
     private Label operationDateLabel;
     @FXML
     private Label transactionDateLabel;
-
-    private static int lastEditedAccount = -1;
     private int predefinedAccount;
     private int accountIdSelected = 0;
     private DesktopApp desktopApp;

@@ -1,4 +1,4 @@
-package io.github.brunfo.apps.controlefinanceiro.model;
+package io.github.brunfo.apps.personalbudget.model;
 
 import javafx.beans.property.*;
 
@@ -28,11 +28,11 @@ public class Transaction {
     /**
      * Contrutor com dados iniciais.
      *
-     * @param id            ID da Operação.
-     * @param operationDate  Data do registro da operação.
+     * @param id              ID da Operação.
+     * @param operationDate   Data do registro da operação.
      * @param transactionDate Data do movimento.
      * @param description     Descrição da operação.
-     * @param amount      Montante movimentado.
+     * @param amount          Montante movimentado.
      */
     public Transaction(Integer id,
                        Integer accountId,

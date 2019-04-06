@@ -1,10 +1,10 @@
-package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
+package io.github.brunfo.apps.personalbudget.desktop.controller;
 
-import io.github.brunfo.apps.controlefinanceiro.controller.MainController;
-import io.github.brunfo.apps.controlefinanceiro.desktop.DesktopApp;
-import io.github.brunfo.apps.controlefinanceiro.model.Account;
-import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
-import io.github.brunfo.apps.controlefinanceiro.util.DateUtil;
+import io.github.brunfo.apps.personalbudget.controller.MainController;
+import io.github.brunfo.apps.personalbudget.desktop.DesktopApp;
+import io.github.brunfo.apps.personalbudget.model.Account;
+import io.github.brunfo.apps.personalbudget.model.Transaction;
+import io.github.brunfo.apps.personalbudget.util.DateUtil;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

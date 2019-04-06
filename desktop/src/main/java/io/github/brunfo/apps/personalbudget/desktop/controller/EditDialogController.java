@@ -1,6 +1,6 @@
-package io.github.brunfo.apps.controlefinanceiro.desktop.controller;
+package io.github.brunfo.apps.personalbudget.desktop.controller;
 
-import io.github.brunfo.apps.controlefinanceiro.controller.OverviewController;
+import io.github.brunfo.apps.personalbudget.controller.OverviewController;
 import javafx.stage.Stage;
 
 public interface EditDialogController extends OverviewController {

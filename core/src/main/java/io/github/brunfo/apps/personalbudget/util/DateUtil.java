@@ -1,4 +1,4 @@
-package io.github.brunfo.apps.controlefinanceiro.util;
+package io.github.brunfo.apps.personalbudget.util;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -6,14 +6,17 @@ import java.time.format.DateTimeParseException;
 
 /**
  * Funções auxiliares para lidar com datas.
- *
  */
 public class DateUtil {
 
-    /** O padrão usado para conversão. Mude como quiser. */
+    /**
+     * O padrão usado para conversão. Mude como quiser.
+     */
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 
-    /** O formatador de data. */
+    /**
+     * O formatador de data.
+     */
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern(DATE_PATTERN);
 
@@ -34,7 +37,7 @@ public class DateUtil {
     /**
      * Converte um String no formato definido {@link DateUtil#DATE_PATTERN}
      * para um objeto {@link LocalDate}.
-     *
+     * <p>
      * Retorna null se o String não puder se convertido.
      *
      * @param dateString a data como String

@@ -1,4 +1,4 @@
-package io.github.brunfo.apps.controlefinanceiro.model;
+package io.github.brunfo.apps.personalbudget.model;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

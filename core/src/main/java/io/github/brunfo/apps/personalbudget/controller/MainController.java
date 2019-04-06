@@ -1,7 +1,7 @@
-package io.github.brunfo.apps.controlefinanceiro.controller;
+package io.github.brunfo.apps.personalbudget.controller;
 
-import io.github.brunfo.apps.controlefinanceiro.model.Account;
-import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
+import io.github.brunfo.apps.personalbudget.model.Account;
+import io.github.brunfo.apps.personalbudget.model.Transaction;
 
 public interface MainController {
     void getData();

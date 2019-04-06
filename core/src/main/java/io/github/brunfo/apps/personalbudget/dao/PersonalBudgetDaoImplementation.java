@@ -1,9 +1,9 @@
-package io.github.brunfo.apps.controlefinanceiro.dao;
+package io.github.brunfo.apps.personalbudget.dao;
 
 
-import io.github.brunfo.apps.controlefinanceiro.model.Account;
-import io.github.brunfo.apps.controlefinanceiro.model.Transaction;
-import io.github.brunfo.apps.controlefinanceiro.util.DateUtil;
+import io.github.brunfo.apps.personalbudget.model.Account;
+import io.github.brunfo.apps.personalbudget.model.Transaction;
+import io.github.brunfo.apps.personalbudget.util.DateUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDao {
+public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
 
-    private static final ControleFinanceiroDaoImpletemtation INSTANCE = new ControleFinanceiroDaoImpletemtation();
+    private static final PersonalBudgetDaoImplementation INSTANCE = new PersonalBudgetDaoImplementation();
 
     private Properties dbProperties;
     private Connection dbConnection = null;
 
-    private ControleFinanceiroDaoImpletemtation() {
+    private PersonalBudgetDaoImplementation() {
         setDBSystemDir();
 
         loadDBProperties(this.getClass().getClassLoader().
@@ -36,7 +36,7 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
         getConnection(protocol + dbName);
     }
 
-    public static ControleFinanceiroDaoImpletemtation getInstance(){
+    public static PersonalBudgetDaoImplementation getInstance() {
         return INSTANCE;
     }
 
@@ -60,8 +60,7 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
     }
 
     private void setDBSystemDir() {
-        // Decide on the db system directory: <userhome>/.addressbook/
-        String systemDir = "controlefinanceiro";
+        @SuppressWarnings("SpellCheckingInspection") String systemDir = "personalbudget";
 
         // Set the db system directory.
         System.setProperty("derby.system.home", systemDir);
@@ -75,8 +74,8 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
         try {
             dbConnection = DriverManager.getConnection(strUrl, props);
             System.out.println("Connection established successfully");
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
+        } catch (SQLException sqlError) {
+            sqlError.printStackTrace();
         }
     }
 
@@ -88,13 +87,13 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
             statement.execute("CREATE table " + tableName + strParameters);
 
             bCreatedTables = true;
-        } catch (SQLException sqle) {
-            if (sqle.getErrorCode() == 30000 &&
-                    sqle.getSQLState().equalsIgnoreCase("X0Y32")) {
+        } catch (SQLException sqlError) {
+            if (sqlError.getErrorCode() == 30000 &&
+                    sqlError.getSQLState().equalsIgnoreCase("X0Y32")) {
                 deleteTable(tableName);
                 bCreatedTables = createTable(tableName, strParameters);
             } else
-                printSQLException(sqle);
+                printSQLException(sqlError);
         }
 
         return bCreatedTables;
@@ -107,8 +106,8 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
             stmtDelete = dbConnection.createStatement();
             stmtDelete.executeUpdate("DROP table " + table);
             dbDeletedTable = true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException sqlError) {
+            sqlError.printStackTrace();
         }
         return dbDeletedTable;
     }
@@ -117,19 +116,19 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
      * Prints details of an SQLException chain to <code>System.err</code>.
      * Details included are SQL State, Error code, Exception message.
      *
-     * @param sqle the SQLException from which to print details.
+     * @param sqlError the SQLException from which to print details.
      */
-    private void printSQLException(SQLException sqle) {
+    private void printSQLException(SQLException sqlError) {
         // Unwraps the entire exception chain to unveil the real cause of the
         // Exception.
-        while (sqle != null) {
+        while (sqlError != null) {
             System.err.println("\n----- SQLException -----");
-            System.err.println("  SQL State:  " + sqle.getSQLState());
-            System.err.println("  Error Code: " + sqle.getErrorCode());
-            System.err.println("  Message:    " + sqle.getMessage());
+            System.err.println("  SQL State:  " + sqlError.getSQLState());
+            System.err.println("  Error Code: " + sqlError.getErrorCode());
+            System.err.println("  Message:    " + sqlError.getMessage());
             // for stack traces, refer to derby.log or uncomment this:
             //e.printStackTrace(System.err);
-            sqle = sqle.getNextException();
+            sqlError = sqlError.getNextException();
         }
     }
 
@@ -138,11 +137,11 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
                 " id          INTEGER NOT NULL" +
                 " PRIMARY KEY GENERATED ALWAYS AS IDENTITY" +
                 "        (START WITH 1, INCREMENT BY 1)," +
-                " idConta       INTEGER," +
-                " dataOp        VARCHAR(30)," +
-                " dataMov       VARCHAR(30)," +
-                " descricao     VARCHAR(150)," +
-                " montante      DOUBLE)";
+                " idAccount             INTEGER," +
+                " dateOperation                VARCHAR(30)," +
+                " dateTransaction       VARCHAR(30)," +
+                " description           VARCHAR(150)," +
+                " amount                DOUBLE)";
     }
 
     private String getTableAccountsStr() {
@@ -150,35 +149,34 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
                 " id          INTEGER NOT NULL" +
                 " PRIMARY KEY GENERATED ALWAYS AS IDENTITY" +
                 "        (START WITH 1, INCREMENT BY 1)," +
-                " nome     VARCHAR(50))";
+                " name     VARCHAR(50))";
     }
 
     @Override
     public List<Transaction> getTransactions() {
         List<Transaction> transactionArrayList = new ArrayList<>();
         Statement statement;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         try {
             statement = dbConnection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM APP.MOVIMENTOS");
+            resultSet = statement.executeQuery("SELECT * FROM APP.TRANSACTIONS");
             while (resultSet.next()){
                 Transaction transaction =new Transaction(
                         resultSet.getInt("id"),
-                        resultSet.getInt("idconta"),
-                        DateUtil.parse(resultSet.getString("dataOp")),
-                        DateUtil.parse(resultSet.getString("dataMov")),
-                        resultSet.getString("descricao"),
-                        resultSet.getDouble("montante"));
+                        resultSet.getInt("idAccount"),
+                        DateUtil.parse(resultSet.getString("dateOperation")),
+                        DateUtil.parse(resultSet.getString("dateTransaction")),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("amount"));
                 transactionArrayList.add(transaction);
-                transaction.toString();
             }
-        } catch (SQLException sqle) {
-            if (sqle.getErrorCode() == 30000 &&
-                    sqle.getSQLState().equalsIgnoreCase("42X05")) {
-                createTable("APP.MOVIMENTOS", getTableTransactionsStr());
+        } catch (SQLException sqlError) {
+            if (sqlError.getErrorCode() == 30000 &&
+                    sqlError.getSQLState().equalsIgnoreCase("42X05")) {
+                createTable("APP.TRANSACTIONS", getTableTransactionsStr());
             }
             else
-                printSQLException(sqle);
+                printSQLException(sqlError);
         }
 
         return transactionArrayList;
@@ -191,14 +189,14 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
 
         try {
             stmtDeleteTransaction = dbConnection.prepareStatement(
-                    "DELETE FROM APP.MOVIMENTOS " +
+                    "DELETE FROM APP.TRANSACTIONS " +
                             "WHERE id = ?");
             stmtDeleteTransaction.clearParameters();
             stmtDeleteTransaction.setInt(1, id);
             stmtDeleteTransaction.executeUpdate();
             bDeleted = true;
-        } catch (SQLException sqle) {
-            printSQLException(sqle);
+        } catch (SQLException sqlError) {
+            printSQLException(sqlError);
         }
         return bDeleted;
     }
@@ -209,12 +207,12 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
         PreparedStatement stmtUpdateExistingRecord;
         try {
             stmtUpdateExistingRecord = dbConnection.prepareStatement(
-                    "UPDATE APP.MOVIMENTOS " +
-                            "SET idConta = ?, " +
-                            "    dataOp = ?, " +
-                            "    dataMov = ?, " +
-                            "    descricao = ?, " +
-                            "    montante = ? " +
+                    "UPDATE APP.TRANSACTIONS " +
+                            "SET idAccount = ?, " +
+                            "    dateOperation = ?, " +
+                            "    dateTransaction = ?, " +
+                            "    description = ?, " +
+                            "    amount = ? " +
                             "WHERE ID = ?");
 
             stmtUpdateExistingRecord.clearParameters();
@@ -228,8 +226,8 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
             int a= stmtUpdateExistingRecord.executeUpdate();
             bEdited = true;
             System.out.println("Record edited successfully, return " + transaction.getId() +" "+ a);
-        } catch (SQLException sqle) {
-            printSQLException(sqle);
+        } catch (SQLException sqlError) {
+            printSQLException(sqlError);
         }
         return bEdited;
     }
@@ -240,9 +238,9 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
         PreparedStatement stmtSaveNewRecord;
         try {
             stmtSaveNewRecord = dbConnection.prepareStatement(
-                    "INSERT INTO APP.MOVIMENTOS " +
-                            "   (idConta, dataOp, dataMov, " +
-                            "    descricao, montante) " +
+                    "INSERT INTO APP.TRANSACTIONS " +
+                            "   (idAccount, dateOperation, dateTransaction, " +
+                            "    description, amount) " +
                             "VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewRecord.clearParameters();
@@ -257,15 +255,15 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
             if (results.next()) {
                 id = results.getInt(1);
             }
-        } catch (SQLException sqle) {
+        } catch (SQLException sqlError) {
             //if table does not exits, creates it and then save the transaction
-            if (sqle.getErrorCode() == 30000 &&
-                    sqle.getSQLState().equalsIgnoreCase("42X05")) {
-                createTable("APP.MOVIMENTOS", getTableTransactionsStr());
+            if (sqlError.getErrorCode() == 30000 &&
+                    sqlError.getSQLState().equalsIgnoreCase("42X05")) {
+                createTable("APP.TRANSACTIONS", getTableTransactionsStr());
                 id= saveTransaction(transaction);
             }
             else
-                printSQLException(sqle);
+                printSQLException(sqlError);
         }
         return id;
     }
@@ -274,22 +272,22 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
     public List<Account> getAccounts() {
         List<Account> accountArrayList = new ArrayList<>();
         Statement statement;
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         try {
             statement = dbConnection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM APP.CONTAS");
+            resultSet = statement.executeQuery("SELECT * FROM APP.ACCOUNTS");
             while (resultSet.next()){
                 accountArrayList.add(new Account(
                         resultSet.getInt("id"),
-                        resultSet.getString("nome")));
+                        resultSet.getString("name")));
             }
-        } catch (SQLException sqle) {
-            if (sqle.getErrorCode() == 30000 &&
-                    sqle.getSQLState().equalsIgnoreCase("42X05")) {
-                createTable("APP.CONTAS", getTableAccountsStr());
+        } catch (SQLException sqlError) {
+            if (sqlError.getErrorCode() == 30000 &&
+                    sqlError.getSQLState().equalsIgnoreCase("42X05")) {
+                createTable("APP.ACCOUNTS", getTableAccountsStr());
             }
             else
-                printSQLException(sqle);
+                printSQLException(sqlError);
         }
 
         return accountArrayList;
@@ -302,14 +300,14 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
 
         try {
             stmtDeleteAccount = dbConnection.prepareStatement(
-                    "DELETE FROM APP.CONTAS " +
+                    "DELETE FROM APP.ACCOUNTS " +
                             "WHERE id = ?");
             stmtDeleteAccount.clearParameters();
             stmtDeleteAccount.setInt(1, id);
             stmtDeleteAccount.executeUpdate();
             bDeleted = true;
-        } catch (SQLException sqle) {
-            printSQLException(sqle);
+        } catch (SQLException sqlError) {
+            printSQLException(sqlError);
         }
         return bDeleted;
     }
@@ -320,8 +318,8 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
         PreparedStatement stmtUpdateExistingRecord;
         try {
             stmtUpdateExistingRecord = dbConnection.prepareStatement(
-                    "UPDATE APP.CONTAS " +
-                            "SET nome = ? " +
+                    "UPDATE APP.ACCOUNTS " +
+                            "SET name = ? " +
                             "WHERE id = ?");
 
             stmtUpdateExistingRecord.clearParameters();
@@ -329,8 +327,8 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
             stmtUpdateExistingRecord.setInt(2, account.getId());
             stmtUpdateExistingRecord.executeUpdate();
             bEdited = true;
-        } catch (SQLException sqle) {
-            printSQLException(sqle);
+        } catch (SQLException sqlError) {
+            printSQLException(sqlError);
         }
         return bEdited;
     }
@@ -341,27 +339,28 @@ public class ControleFinanceiroDaoImpletemtation implements ControleFinanceiroDa
         PreparedStatement stmtSaveNewRecord;
         try {
             stmtSaveNewRecord = dbConnection.prepareStatement(
-                    "INSERT INTO APP.CONTAS " +
-                            "   (nome) " +
+                    "INSERT INTO APP.ACCOUNTS " +
+                            "   (name) " +
                             "VALUES (?)",
                     Statement.RETURN_GENERATED_KEYS);
             stmtSaveNewRecord.clearParameters();
             stmtSaveNewRecord.setString(1, account.getName());
+
 
             int rowCount = stmtSaveNewRecord.executeUpdate();
             ResultSet results = stmtSaveNewRecord.getGeneratedKeys();
             if (results.next()) {
                 id = results.getInt(1);
             }
-        } catch (SQLException sqle) {
+        } catch (SQLException sqlError) {
             //if table does not exits, creates it and then save the account
-            if (sqle.getErrorCode() == 30000 &&
-                    sqle.getSQLState().equalsIgnoreCase("42X05")) {
-                createTable("APP.CONTAS", getTableAccountsStr());
+            if (sqlError.getErrorCode() == 30000 &&
+                    sqlError.getSQLState().equalsIgnoreCase("42X05")) {
+                createTable("APP.ACCOUNTS", getTableAccountsStr());
                 id= saveAccount(account);
             }
             else
-                printSQLException(sqle);
+                printSQLException(sqlError);
         }
         return id;
     }
