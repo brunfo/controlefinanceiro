@@ -5,6 +5,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Classe Model para uma Account.
  *
@@ -14,6 +17,11 @@ public class Account {
 
     private final ObjectProperty<Integer> id;
     private final StringProperty name;
+
+    private final List<Transaction> transactions = new ArrayList<>();
+
+    private double balance = 0;
+
 
     /**
      * Construtor padrão
@@ -57,8 +65,22 @@ public class Account {
         return name;
     }
 
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void updateBalance(double amount) {
+        balance += amount;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
     @Override
     public String toString() {
         return getName();
     }
+
+
 }

@@ -17,6 +17,7 @@ public class Transaction {
     private final ObjectProperty<LocalDate> transactionDate;
     private final StringProperty description;
     private final ObjectProperty<Double> amount;
+    private ObjectProperty<Double> balance;
 
     /**
      * Contrutor padrão
@@ -47,6 +48,7 @@ public class Transaction {
         this.transactionDate = new SimpleObjectProperty<>(transactionDate);
         this.description = new SimpleStringProperty(description);
         this.amount = new SimpleObjectProperty<>(amount);
+        this.balance = new SimpleObjectProperty<>(0.0);
     }
 
     public Integer getId() {
@@ -121,16 +123,19 @@ public class Transaction {
         return amount;
     }
 
+    public void setBalance(double balance) {
+        this.balance.setValue(balance);
+    }
+
 
     @Override
     public String toString() {
         return "Transaction{" +
-                "id=" + id +
-                ", accountId=" + accountId +
-                ", operationDate=" + operationDate +
-                ", transactionDate=" + transactionDate +
-                ", description=" + description +
-                ", amount=" + amount +
+                " " + operationDate.get() +
+                ", " + transactionDate.get() +
+                ", " + description.get() +
+                ", " + amount.get() +
+                ", " + balance.get() +
                 '}';
     }
 }
