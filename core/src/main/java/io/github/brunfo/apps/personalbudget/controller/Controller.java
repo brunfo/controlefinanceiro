@@ -39,11 +39,11 @@ public class Controller {
         accounts.removeAccount(account);
     }
 
-    public boolean addTransaction(Transaction tempTransaction) {
+    public boolean addTransaction(Transaction tempTransaction) throws Exception {
         return accounts.addTransaction(tempTransaction);
     }
 
-    public boolean removeTransaction(Transaction transaction) {
+    public boolean removeTransaction(Transaction transaction) throws Exception {
         return accounts.removeTransaction(transaction);
     }
 

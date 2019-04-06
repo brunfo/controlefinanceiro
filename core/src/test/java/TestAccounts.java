@@ -32,13 +32,13 @@ public class TestAccounts {
         transaction = new Transaction();
         transaction.setAmount(-28.0);
         transaction.setDescription("movimento 4");
-        transaction.setAccountId(2);
+        transaction.setAccountId(3);
         addTransaction(transaction);
 
         transaction = new Transaction();
         transaction.setAmount(28.0);
         transaction.setDescription("movimento 5");
-        transaction.setAccountId(2);
+        transaction.setAccountId(3);
         removeTransaction(transaction);
 
         printAccountTransactions(controller.getAccount("Conta 2"));
@@ -46,9 +46,13 @@ public class TestAccounts {
     }
 
     static void removeTransaction(Transaction transaction) {
-        if (!controller.removeTransaction(transaction))
-            System.out.println(("Movimento \"" + transaction.getDescription() +
-                    "\" não existe na conta : " + controller.getAccountById(transaction.getAccountId())));
+        try {
+            if (!controller.removeTransaction(transaction))
+                System.out.println(("Movimento \"" + transaction.getDescription() +
+                        "\" não existe na conta : " + controller.getAccountById(transaction.getAccountId())));
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
     }
 
     static void printAccountTransactions(Account account) {
@@ -65,10 +69,15 @@ public class TestAccounts {
     }
 
     static void addTransaction(Transaction transaction) {
-        if (!controller.addTransaction(transaction))
-            System.out.println("Não tem saldo suficiente! Saldo : " +
-                    controller.getAccountById(transaction.getAccountId()).getBalance() +
-                    " - montante a movimentar : " + transaction.getAmount());
+        try {
+            if (!controller.addTransaction(transaction))
+                System.out.println("Não tem saldo suficiente! Saldo : " +
+                        controller.getAccountById(transaction.getAccountId()).getBalance() +
+                        " - montante a movimentar : " + transaction.getAmount());
+        } catch (Exception error) {
+            System.out.println(error.getMessage());
+        }
+
     }
 
 }
