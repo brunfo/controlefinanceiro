@@ -99,7 +99,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
         return bCreatedTables;
     }
 
-    private boolean deleteTable(String table) {
+    private void deleteTable(String table) {
         boolean dbDeletedTable = false;
         Statement stmtDelete;
         try {
@@ -109,7 +109,6 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
         } catch (SQLException sqlError) {
             sqlError.printStackTrace();
         }
-        return dbDeletedTable;
     }
 
     /**

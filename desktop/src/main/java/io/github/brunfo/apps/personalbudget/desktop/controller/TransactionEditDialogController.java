@@ -38,6 +38,7 @@ public class TransactionEditDialogController implements EditDialogController {
      * Inicializa a classe controlle. Este método é chamado automaticamente
      * após o arquivo fxml ter sido carregado.
      */
+    @SuppressWarnings("EmptyMethod")
     @FXML
     private void initialize() {
 
@@ -125,14 +126,14 @@ public class TransactionEditDialogController implements EditDialogController {
         if (operationDatePicker.getValue() == null) {
             errorMessage += "Data inválida!\n";
         } else {
-            if (!DateUtil.validDate(operationDatePicker.getValue().toString())) {
+            if (DateUtil.isValidDate(operationDatePicker.getValue().toString())) {
                 errorMessage += "Data transaction inválida. Use o formato " + DateUtil.getDateFormat() + "!\n";
             }
         }
         if (transactionDatePicker.getValue() == null) {
             errorMessage += "Data inválida!\n";
         } else {
-            if (!DateUtil.validDate(transactionDatePicker.getValue().toString())) {
+            if (DateUtil.isValidDate(transactionDatePicker.getValue().toString())) {
                 errorMessage += "Data transaction inválida. Use o formato " + DateUtil.getDateFormat() + "!\n valor: " + transactionDatePicker.getPromptText();
             }
         }

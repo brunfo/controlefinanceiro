@@ -57,9 +57,9 @@ public class DateUtil {
      * @param dateString A data como String
      * @return true se o String é uma data válida
      */
-    public static boolean validDate(String dateString) {
+    public static boolean isValidDate(String dateString) {
         // Tenta converter o String.
-        return DateUtil.parse(dateString) != null;
+        return DateUtil.parse(dateString) == null;
     }
 
     public static String getDateFormat() {

@@ -29,7 +29,7 @@ import java.io.IOException;
 public class DesktopApp extends Application implements MainController {
 
     //database handler
-    private static PersonalBudgetDao dbHandler = PersonalBudgetDaoImplementation.getInstance();
+    private static final PersonalBudgetDao dbHandler = PersonalBudgetDaoImplementation.getInstance();
     public final String TITLE = "Personal Budget";
     public final String VERSION = "1.1-SNAPSHOT";
     private Stage primaryStage;
@@ -37,8 +37,8 @@ public class DesktopApp extends Application implements MainController {
     /**
      * Os dados como uma observable list de Transactions.
      */
-    private ObservableList<Transaction> transactionsObservableList = FXCollections.observableArrayList();
-    private ObservableList<Account> accountsObservableList = FXCollections.observableArrayList();
+    private final ObservableList<Transaction> transactionsObservableList = FXCollections.observableArrayList();
+    private final ObservableList<Account> accountsObservableList = FXCollections.observableArrayList();
 
     /**
      * Construtor
