@@ -14,12 +14,12 @@ class Accounts {
         return accounts;
     }
 
-    void addAccount(Account tempAccount) {
-        accounts.add(tempAccount);
+    boolean addAccount(Account tempAccount) {
+        return accounts.add(tempAccount);
     }
 
-    void removeAccount(Account account) {
-        accounts.remove(account);
+    boolean removeAccount(Account account) {
+        return accounts.remove(account);
     }
 
     Account getAccount(String accountName) {
@@ -38,8 +38,15 @@ class Accounts {
         return null;
     }
 
-    boolean addTransaction(Transaction tempTransaction) {
+    /**
+     * Adds a transaction to a existing account
+     *
+     * @param tempTransaction
+     * @return
+     */
+    boolean addTransaction(Transaction tempTransaction) throws Exception {
         Account account = getAccountById(tempTransaction.getAccountId());
+        isAccountValid(account);
         //Verifies if is possible to make the transaction
         if (account.getBalance() + tempTransaction.getAmount() >= 0) {
             account.getTransactions().add(tempTransaction);
@@ -53,12 +60,26 @@ class Accounts {
     }
 
 
-    boolean removeTransaction(Transaction transaction) {
+    /**
+     * Removes a transaction from a account.
+     *
+     * @param transaction to be removed.
+     * @return true or false. If transaction does not exists in the account, return false.
+     */
+    boolean removeTransaction(Transaction transaction) throws Exception {
         Account account = getAccountById(transaction.getAccountId());
+        isAccountValid(account);
         if (account.getTransactions().remove(transaction)) {
             account.updateBalance(-1 * transaction.getAmount());
             return true;
         }
         return false;
+    }
+
+    boolean isAccountValid(Account account) throws Exception {
+        if (account != null) {
+            return true;
+        }
+        throw new Exception("Account does not exists!");
     }
 }

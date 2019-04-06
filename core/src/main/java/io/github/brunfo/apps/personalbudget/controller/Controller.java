@@ -23,8 +23,8 @@ public class Controller {
         return this.accounts.getAccounts();
     }
 
-    public void addAccount(Account tempAccount) {
-        accounts.addAccount(tempAccount);
+    public boolean addAccount(Account tempAccount) {
+        return accounts.addAccount(tempAccount);
     }
 
     public Account getAccount(String accountName) {
@@ -35,15 +35,15 @@ public class Controller {
         return accounts.getAccountById(accountId);
     }
 
-    public void removeAccount(Account account) {
-        accounts.removeAccount(account);
+    public boolean removeAccount(Account account) {
+        return accounts.removeAccount(account);
     }
 
-    public boolean addTransaction(Transaction tempTransaction) {
+    public boolean addTransaction(Transaction tempTransaction) throws Exception {
         return accounts.addTransaction(tempTransaction);
     }
 
-    public boolean removeTransaction(Transaction transaction) {
+    public boolean removeTransaction(Transaction transaction) throws Exception {
         return accounts.removeTransaction(transaction);
     }
 
