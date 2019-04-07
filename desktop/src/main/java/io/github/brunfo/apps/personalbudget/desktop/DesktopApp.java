@@ -30,7 +30,7 @@ public class DesktopApp extends Application implements MainController {
 
     //database handler
     private static final PersonalBudgetDao dbHandler = PersonalBudgetDaoImplementation.getInstance();
-    public final String TITLE = "Personal Budget";
+    public final String TITLE = "Personal Item";
     public final String VERSION = "1.1-SNAPSHOT";
     private Stage primaryStage;
     private BorderPane rootLayout;

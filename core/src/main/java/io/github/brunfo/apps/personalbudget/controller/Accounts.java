@@ -42,14 +42,12 @@ class Accounts {
      * Adds a transaction to a existing account
      *
      * @param tempTransaction transaction to add.
-     * @return true if success.
-     * @throws Exception throws an error id the account does not exists.
+     * @return true if success, false is not.
      */
-    boolean addTransaction(Transaction tempTransaction) throws Exception {
+    boolean addTransaction(Transaction tempTransaction) {
         Account account = getAccountById(tempTransaction.getAccountId());
-        isAccountValid(account);
         //Verifies if is possible to make the transaction
-        if (account.getBalance() + tempTransaction.getAmount() >= 0) {
+        if (isAccountValid(account) && account.getBalance() + tempTransaction.getAmount() >= 0) {
             account.getTransactions().add(tempTransaction);
             //updates the account balance
             account.updateBalance(tempTransaction.getAmount());
@@ -60,19 +58,64 @@ class Accounts {
         return false;
     }
 
+    boolean changeAccount(Transaction transaction, Account account) {
+        if (isAccountValid(account)) {
+            Account oldAccount = getAccountById(transaction.getAccountId());
+            removeTransaction(transaction);
+            transaction.setAccountId(account.getId());
+            addTransaction(transaction);
+            updateTransactionsBalance(oldAccount);
+            updateTransactionsBalance(account);
+            return true;
+        }
+        return false;
+    }
+
+    private void updateTransactionsBalance(Account account) {
+        double balance = 0.0;
+        for (Transaction transaction : account.getTransactions()) {
+            balance += transaction.getAmount();
+            transaction.setBalance(balance);
+        }
+    }
+
+    Transaction copyTransaction(Transaction transaction) {
+        return new Transaction(
+                transaction.getId(),
+                transaction.getAccountId(),
+                transaction.getOperationDate(),
+                transaction.getTransactionDate(),
+                transaction.getDescription(),
+                transaction.getAmount(),
+                transaction.getBudgetItems());
+    }
 
     /**
      * Removes a transaction from a account.
      *
      * @param transaction to be removed.
      * @return true or false. If transaction does not exists in the account, return false.
-     * @throws Exception throws an error id the account does not exists.
      */
-    boolean removeTransaction(Transaction transaction) throws Exception {
+    boolean removeTransaction(Transaction transaction) {
         Account account = getAccountById(transaction.getAccountId());
-        isAccountValid(account);
-        if (account.getTransactions().remove(transaction)) {
+        if (isAccountValid(account) && account.getTransactions().remove(transaction)) {
             account.updateBalance(-1 * transaction.getAmount());
+            return true;
+        }
+        return false;
+    }
+
+    @SuppressWarnings({"SpellCheckingInspection"})
+    boolean transferToAccount(Transaction tempTransaction, Account account) {
+        if (isAccountValid(account)) {
+            Transaction originTransaction = copyTransaction(tempTransaction);
+            Transaction destinyTransaction = copyTransaction(tempTransaction);
+            originTransaction.setAmount(tempTransaction.getAmount() * -1);
+            originTransaction.setDescription("trfd from: " + tempTransaction.getDescription());
+            destinyTransaction.setDescription("trfd to: " + tempTransaction.getDescription());
+            destinyTransaction.setAccountId(account.getId());
+            if (addTransaction(originTransaction))
+                addTransaction(destinyTransaction);
             return true;
         }
         return false;
@@ -82,13 +125,11 @@ class Accounts {
      * Checks if a account exists.
      *
      * @param account account to check.
-     * @return true if exists
-     * @throws Exception throws an error if the account does not exists.
+     * @return true or false.
      */
-    boolean isAccountValid(Account account) throws Exception {
-        if (account != null) {
-            return true;
-        }
-        throw new Exception("Account does not exists!");
+    private boolean isAccountValid(Account account) {
+        return account != null;
     }
+
+
 }

@@ -3,12 +3,15 @@ package io.github.brunfo.apps.personalbudget.model;
 import javafx.beans.property.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Classe Model para um Transaction.
+ * Class Model for a Transaction.
  *
  * @author Bruno Rego
  */
+
 public class Transaction {
 
     private final IntegerProperty id;
@@ -17,23 +20,24 @@ public class Transaction {
     private final ObjectProperty<LocalDate> transactionDate;
     private final StringProperty description;
     private final ObjectProperty<Double> amount;
-    private ObjectProperty<Double> balance;
+    private final ObjectProperty<Double> balance;
+    private Map<Item, Double> budgetItems;
 
     /**
-     * Contrutor padrão
+     * Constructor
      */
     public Transaction() {
         this(0, 0, LocalDate.now(), LocalDate.now(), null, 0);
     }
 
     /**
-     * Contrutor com dados iniciais.
+     * Constructor width initial data.
      *
-     * @param id              ID da Operação.
-     * @param operationDate   Data do registro da operação.
-     * @param transactionDate Data do movimento.
-     * @param description     Descrição da operação.
-     * @param amount          Montante movimentado.
+     * @param id              ID of transaction.
+     * @param operationDate   Date of register transaction.
+     * @param transactionDate Date of transaction.
+     * @param description     Description.
+     * @param amount          Amount.
      */
     public Transaction(Integer id,
                        Integer accountId,
@@ -41,7 +45,26 @@ public class Transaction {
                        LocalDate transactionDate,
                        String description,
                        double amount) {
+        this(id, accountId, operationDate, transactionDate, description, amount, new HashMap<>());
+    }
 
+    /**
+     * Constructor width initial data.
+     *
+     * @param id              ID of transaction.
+     * @param operationDate   Date of register transaction.
+     * @param transactionDate Date of transaction.
+     * @param description     Description.
+     * @param amount          Amount.
+     * @param budgetItems     HashMap of budget items.
+     */
+    @SuppressWarnings("unchecked")
+    public Transaction(Integer id,
+                       Integer accountId,
+                       LocalDate operationDate,
+                       LocalDate transactionDate,
+                       String description,
+                       double amount, Map budgetItems) {
         this.id = new SimpleIntegerProperty(id);
         this.accountId = new SimpleIntegerProperty(accountId);
         this.operationDate = new SimpleObjectProperty<>(operationDate);
@@ -49,6 +72,7 @@ public class Transaction {
         this.description = new SimpleStringProperty(description);
         this.amount = new SimpleObjectProperty<>(amount);
         this.balance = new SimpleObjectProperty<>(0.0);
+        this.budgetItems = budgetItems;
     }
 
     public Integer getId() {
@@ -125,6 +149,15 @@ public class Transaction {
 
     public void setBalance(double balance) {
         this.balance.setValue(balance);
+    }
+
+    public Map<Item, Double> getBudgetItems() {
+        return budgetItems;
+    }
+
+    @SuppressWarnings("unused")
+    public void setBudgetItems(Map<Item, Double> budgetItems) {
+        this.budgetItems = budgetItems;
     }
 
     @Override

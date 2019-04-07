@@ -1,18 +1,10 @@
 package io.github.brunfo.apps.personalbudget.model;
 
-public class Rubric {
+
+public class Item {
     private int id;
     private String name;
-
-
-    public Rubric(int id, String name) {
-        this(name);
-        setId(id);
-    }
-
-    public Rubric(String name) {
-        setName(name);
-    }
+    private Family family;
 
     public int getId() {
         return id;
@@ -22,12 +14,20 @@ public class Rubric {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    public Family getFamily() {
+        return family;
     }
+
+    public void setFamily(Family family) {
+        this.family = family;
+    }
+
 }
