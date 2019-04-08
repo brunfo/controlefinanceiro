@@ -3,12 +3,17 @@ package io.github.brunfo.apps.personalbudget.controller;
 import io.github.brunfo.apps.personalbudget.model.Account;
 import io.github.brunfo.apps.personalbudget.model.Transaction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class Accounts {
 
-    private final List<Account> accounts = new ArrayList<>();
+    private List<Account> accounts = null;
+
+    private boolean allowNegativeBalance = false;
+
+    void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
 
     List<Account> getAccounts() {
         return accounts;
@@ -38,6 +43,15 @@ class Accounts {
         return null;
     }
 
+
+    void setTransactionsToAccounts(List<Transaction> transactionList) {
+        allowNegativeBalance = true;
+        for (Transaction transaction : transactionList) {
+            addTransaction(transaction);
+        }
+        allowNegativeBalance = false;
+    }
+
     /**
      * Adds a transaction to a existing account
      *
@@ -47,7 +61,9 @@ class Accounts {
     boolean addTransaction(Transaction tempTransaction) {
         Account account = getAccountById(tempTransaction.getAccountId());
         //Verifies if is possible to make the transaction
-        if (isAccountValid(account) && account.getBalance() + tempTransaction.getAmount() >= 0) {
+        if (isAccountValid(account) &&
+                (account.getBalance() + tempTransaction.getAmount() >= 0 ||
+                        allowNegativeBalance)) {
             account.getTransactions().add(tempTransaction);
             //updates the account balance
             account.updateBalance(tempTransaction.getAmount());
@@ -100,22 +116,6 @@ class Accounts {
         Account account = getAccountById(transaction.getAccountId());
         if (isAccountValid(account) && account.getTransactions().remove(transaction)) {
             account.updateBalance(-1 * transaction.getAmount());
-            return true;
-        }
-        return false;
-    }
-
-    @SuppressWarnings({"SpellCheckingInspection"})
-    boolean transferToAccount(Transaction tempTransaction, Account account) {
-        if (isAccountValid(account)) {
-            Transaction originTransaction = copyTransaction(tempTransaction);
-            Transaction destinyTransaction = copyTransaction(tempTransaction);
-            originTransaction.setAmount(tempTransaction.getAmount() * -1);
-            originTransaction.setDescription("trfd from: " + tempTransaction.getDescription());
-            destinyTransaction.setDescription("trfd to: " + tempTransaction.getDescription());
-            destinyTransaction.setAccountId(account.getId());
-            if (addTransaction(originTransaction))
-                addTransaction(destinyTransaction);
             return true;
         }
         return false;

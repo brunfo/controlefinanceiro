@@ -92,9 +92,9 @@ public class AccountsUnitaryTests {
         transaction.setDescription("transferencia");
         transaction.setAccountId(2);
         try {
-            assertTrue(controller.transferToAcount(transaction, controller.getAccount("Conta 1")));
+            assertTrue(controller.transferToAccount(transaction, controller.getAccount("Conta 1")));
             assertNull(controller.getAccount("Conta 6"));
-            assertFalse(controller.transferToAcount(transaction, controller.getAccount("Conta 6")));
+            assertFalse(controller.transferToAccount(transaction, controller.getAccount("Conta 6")));
 
         } catch (Exception e) {
             e.printStackTrace();

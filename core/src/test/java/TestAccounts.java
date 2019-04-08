@@ -65,7 +65,7 @@ public class TestAccounts {
         transaction.setAmount(5.);
         transaction.setDescription("transferencia");
         transaction.setAccountId(2);
-        controller.transferToAcount(transaction, controller.getAccount("conta 1"));
+        controller.transferToAccount(transaction, controller.getAccount("conta 1"));
 
 
         printAccountTransactions(controller.getAccount("Conta 1"));

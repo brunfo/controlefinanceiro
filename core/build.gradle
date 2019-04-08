@@ -12,4 +12,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.apache.derby', name: 'derby', version: '10.14.2.0'
+    compile group: 'org.apache.derby', name: 'derbyclient', version: '10.14.2.0'
+    compile group: 'org.apache.derby', name: 'derbytools', version: '10.14.2.0'
 }

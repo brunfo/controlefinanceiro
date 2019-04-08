@@ -1,5 +1,7 @@
 package io.github.brunfo.apps.personalbudget.controller;
 
+import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDao;
+import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDaoImplementation;
 import io.github.brunfo.apps.personalbudget.model.*;
 
 import java.util.List;
@@ -8,6 +10,8 @@ public class Controller {
 
     private final static Controller INSTANCE = new Controller();
 
+    //Database handler
+    private PersonalBudgetDao dbHandler;
     //controller of the accounts
     private Accounts accounts;
     //controller of the budgets
@@ -27,6 +31,15 @@ public class Controller {
         return INSTANCE;
     }
 
+    //********************* Database ***********************//
+
+    void loadDataFromDatabase() {
+        dbHandler = PersonalBudgetDaoImplementation.getInstance();
+        accounts = new Accounts();
+        budgets = new Budgets();
+        accounts.setAccounts(dbHandler.getAccounts());
+        accounts.setTransactionsToAccounts(dbHandler.getTransactions());
+    }
     //********************* Accounts ***********************//
 
     /**
@@ -85,11 +98,42 @@ public class Controller {
      * @return true if success.
      */
     public boolean addTransaction(Transaction tempTransaction) {
-        return accounts.addTransaction(tempTransaction);
+        //saves transactions to database and gets the id
+        int id = dbHandler.saveTransaction(tempTransaction);
+        if (id >= 0) {
+            tempTransaction.setId(id);
+            return accounts.addTransaction(tempTransaction);
+        }
+        return false;
     }
 
-    public boolean transferToAcount(Transaction transaction, Account account) {
-        return accounts.transferToAccount(transaction, account);
+    public boolean transferToAccount(Transaction tempTransaction, Account destinyAccount) {
+        Account originAccount = accounts.getAccountById(tempTransaction.getAccountId());
+        if (originAccount != null && destinyAccount != null) {
+            //Creates two new transactions
+            Transaction originTransaction = copyTransaction(tempTransaction);
+            Transaction destinyTransaction = copyTransaction(tempTransaction);
+            //Sets the amount to negative in the origin account
+            originTransaction.setAmount(tempTransaction.getAmount() * -1);
+            //adds description referring that is a transfer
+            originTransaction.setDescription("trfd from: " + tempTransaction.getDescription());
+            destinyTransaction.setDescription("trfd to: " + tempTransaction.getDescription());
+
+            //sets destiny account
+            destinyTransaction.setAccountId(destinyAccount.getId());
+
+            //adds to the list of respective accounts
+            if (addTransaction(originTransaction) &&
+                    addTransaction(destinyTransaction))
+                return true;
+
+            //TODO change this method to a rollback
+            //the transfer had failed if has reached this point,
+            // it reverts  any entry in the database
+            dbHandler.deleteTransaction(originTransaction.getId());
+            dbHandler.deleteTransaction(destinyTransaction.getId());
+        }
+        return false;
     }
 
     /**
@@ -100,7 +144,14 @@ public class Controller {
      * @return true if success.
      */
     public boolean changeAccount(Transaction transaction, Account account) {
-        return accounts.changeAccount(transaction, account);
+        Transaction tempTransaction = copyTransaction(transaction);
+        if (accounts.changeAccount(transaction, account)) {
+            if (!dbHandler.editTransaction(transaction))
+                transaction = tempTransaction;
+            else
+                return true;
+        }
+        return false;
     }
 
     /**
