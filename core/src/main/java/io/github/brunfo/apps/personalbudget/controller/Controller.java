@@ -1,8 +1,6 @@
 package io.github.brunfo.apps.personalbudget.controller;
 
-import io.github.brunfo.apps.personalbudget.model.Account;
-import io.github.brunfo.apps.personalbudget.model.Item;
-import io.github.brunfo.apps.personalbudget.model.Transaction;
+import io.github.brunfo.apps.personalbudget.model.*;
 
 import java.util.List;
 
@@ -17,6 +15,7 @@ public class Controller {
 
     private Controller() {
         accounts = new Accounts();
+        budgets = new Budgets();
     }
 
     /**
@@ -120,12 +119,36 @@ public class Controller {
      * @param transaction transaction.
      * @return true if success.
      */
-    public boolean removeTransaction(Transaction transaction)  {
+    public boolean removeTransaction(Transaction transaction) {
         return accounts.removeTransaction(transaction);
     }
 
 
     //********************* Budgets ***********************//
+
+    public boolean addBudget(Budget tempBudget) {
+        return budgets.addBudget(tempBudget);
+    }
+
+    public boolean removeBudget(String budget) {
+        return budgets.removeBudget(budget);
+    }
+
+    public Budget getBudget(String budgetName) {
+        return budgets.getBudget(budgetName);
+    }
+
+    public boolean addItemToBudget(Item item, String budget) {
+        return budgets.addItemToBudget(item, budget);
+    }
+
+    public boolean removeItemFromBudget(Item item, String budget) {
+        return budgets.removeItemFromBudget(item, budget);
+    }
+
+    public List<Item> getItemsByFamily(Family family, String budget) {
+        return budgets.getItemsByFamily(family, budget);
+    }
 
     /**
      * Splits a transaction in two different items from the budget.

@@ -77,10 +77,10 @@ public class Account {
         return balance;
     }
 
-    @Override
+   /* @Override
     public String toString() {
         return getName();
     }
-
+*/
 
 }

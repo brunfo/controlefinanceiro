@@ -12,16 +12,13 @@ public class AccountsUnitaryTests {
 
     Controller controller;
     Transaction transaction;
+    Account conta3;
 
     @Before
     public void setUp() throws Exception {
         controller = Controller.getInstance();
-        controller.addAccount(new Account(1, "Conta 1"));
-        controller.addAccount(new Account(2, "Conta 2"));
-        transaction = new Transaction();
-        transaction.setAmount(-28.0);
-        transaction.setDescription("movimento 4");
-        transaction.setAccountId(1);
+
+
     }
 
     @After
@@ -34,7 +31,11 @@ public class AccountsUnitaryTests {
 
     @Test
     public void addAccount() {
+        controller.addAccount(new Account(1, "Conta 1"));
+        controller.addAccount(new Account(2, "Conta 2"));
         assertTrue(controller.addAccount(new Account(4, "Conta 4")));
+        conta3 = new Account(3, "Conta 3");
+        assertTrue(controller.addAccount(conta3));
     }
 
     @Test
@@ -44,8 +45,7 @@ public class AccountsUnitaryTests {
 
     @Test
     public void getAccount() {
-        Account conta3 = new Account(3, "Conta 3");
-        controller.addAccount(conta3);
+
         assertSame(controller.getAccount("Conta 3"), conta3);
     }
 
@@ -57,11 +57,15 @@ public class AccountsUnitaryTests {
     @Test
     public void addTransaction() {
         try {
+            transaction = new Transaction();
+            transaction.setAmount(-28.0);
+            transaction.setDescription("movimento 4");
+            transaction.setAccountId(4);
             assertFalse(controller.addTransaction(transaction));
             transaction = new Transaction();
             transaction.setAmount(28.0);
-            transaction.setDescription("movimento 4");
-            transaction.setAccountId(1);
+            transaction.setDescription("movimento 5");
+            transaction.setAccountId(5);
             assertTrue(controller.addTransaction(transaction));
         } catch (Exception e) {
             e.printStackTrace();

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Budgets {
+class Budgets {
 
     private final List<Budget> budgets = new ArrayList<>();
 
@@ -17,8 +17,8 @@ public class Budgets {
         return budgets.add(tempBudget);
     }
 
-    boolean removeBudget(Budget budget) {
-        return budgets.remove(budget);
+    boolean removeBudget(String budget) {
+        return budgets.remove(getBudget(budget));
     }
 
     Budget getBudget(String name) {
@@ -37,9 +37,9 @@ public class Budgets {
         return null;
     }
 
-    List<Item> getFamilyItemsFromBuget(Family family, Budget budget) {
+    List<Item> getItemsByFamily(Family family, String budget) {
         List<Item> items = new ArrayList<>();
-        for (Item item : budget.getItems()) {
+        for (Item item : getBudget(budget).getItems()) {
             if (item.getFamily() == family)
                 items.add(item);
         }
@@ -68,5 +68,13 @@ public class Budgets {
             return true;
         }
         return false;
+    }
+
+    boolean addItemToBudget(Item item, String budget) {
+        return getBudget(budget).getItems().add(item);
+    }
+
+    boolean removeItemFromBudget(Item item, String budget) {
+        return getBudget(budget).getItems().remove(item);
     }
 }
