@@ -1,5 +1,6 @@
 package io.github.brunfo.apps.personalbudget.desktop;
 
+import io.github.brunfo.apps.personalbudget.controller.Controller;
 import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDao;
 import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDaoImplementation;
 import io.github.brunfo.apps.personalbudget.desktop.controller.*;
@@ -21,11 +22,13 @@ import java.io.IOException;
 
 /**
  * Classe principal. Esta classe é a classe principal que funciona de entrada,
- * como também de controller de toda a App.
+ * como também de mainController de toda a App.
  * Toda a gestão de vistas como de dados tem de passar por esta classe.
  */
 public class DesktopApp extends Application {
 
+    //the Main mainController
+    Controller mainController = Controller.getInstance();
     //database handler
     private static final PersonalBudgetDao dbHandler = PersonalBudgetDaoImplementation.getInstance();
     public final String TITLE = "Personal Budget";
@@ -92,7 +95,7 @@ public class DesktopApp extends Application {
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
 
-            // Dá ao controller o acesso ao main app.
+            // Dá ao mainController o acesso ao main app.
             RootLayoutController controller = loader.getController();
             controller.setDesktopApp(this);
 
@@ -101,7 +104,7 @@ public class DesktopApp extends Application {
             e.printStackTrace();
         }
         //Carega os dados da base dados
-        getData();
+        updateData();
     }
 
 
@@ -142,7 +145,7 @@ public class DesktopApp extends Application {
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
-            // Define a pessoa no controller.
+            // Define a pessoa no mainController.
             EditDialogController controller = loader.getController();
             controller.setDesktopApp(this);
             controller.setDialogStage(dialogStage);
@@ -168,13 +171,12 @@ public class DesktopApp extends Application {
                 (TransactionOverviewController) showOverview("/view/TransactionsOverview.fxml");
 
         if (controller != null) {
-            //TODO cria ficheiro con preferencias de conta predefinida
-            //envia preferencias de conta predefinida
-            controller.setPredefinedAccount(0);
-
             if (accountsObservableList.size() > 0) {
                 //envias as contas disponiveis para selecionar
                 controller.setAvailableAccounts(accountsObservableList);
+                //TODO cria ficheiro con preferencias de conta predefinida
+                //envia preferencias de conta predefinida
+                controller.setPredefinedAccount(accountsObservableList.get(0).getId());
             }
         }
     }
@@ -216,14 +218,12 @@ public class DesktopApp extends Application {
         return false;
     }
 
-
     /**
      * Mostra o Accounts
      */
     public void showAccountsOverview() {
         showOverview("/view/AccountsOverview.fxml");
     }
-
 
     /**
      * Abre uma janela para editar detalhes para a pessoa especificada. Se o usuário clicar
@@ -249,7 +249,7 @@ public class DesktopApp extends Application {
     }
 
     /**
-     * Mostra o Accounts
+     * Mostra o Setup
      */
     public void showSetup() {
         showOverview("/view/Setup.fxml");
@@ -264,40 +264,48 @@ public class DesktopApp extends Application {
     /**
      * Carrega dados da base de dados.
      */
-    private void getData() {
+    private void updateData() {
         //passa os dados para a ObservableList
-        transactionsObservableList.addAll(dbHandler.getTransactions());
-        accountsObservableList.addAll(dbHandler.getAccounts());
+        accountsObservableList.clear();
+        accountsObservableList.addAll(mainController.getAccounts());
     }
 
-    public void saveTransaction(Transaction tempTransaction) {
-        int id = dbHandler.saveTransaction(tempTransaction);
-        tempTransaction.setId(id);
-        getTransactions().add(tempTransaction);
+    ///ACCOUNTS
+
+    public void addAccount(Account tempAccount) {
+        mainController.addAccount(tempAccount);
+        updateData();
     }
 
-    public void saveAccount(Account tempAccount) {
-        //save to database and get id
-        int id = dbHandler.saveAccount(tempAccount);
-        //TODO verificar se foi salva pelo retorno do id
-        tempAccount.setId(id);
-        getAccounts().add(tempAccount); //adiciona à observableList
+    public void editAccount(Account selectedAccount) {
+        mainController.editAccount(selectedAccount);
+        updateData();
     }
 
-    public void updateTransaction(Transaction selectedTransaction) {
-        dbHandler.editTransaction(selectedTransaction);
+    public void removeAccount(Account selectedAccount) {
+        mainController.removeAccount(selectedAccount);
+        updateData();
     }
 
-    public void updateAccount(Account selectedAccount) {
-        dbHandler.editAccount(selectedAccount);
+    public Account getAccountById(Integer accountId) {
+        return mainController.getAccountById(accountId);
     }
 
-    public void deleteTransaction(Transaction selectedTransaction) {
-        dbHandler.deleteTransaction(selectedTransaction.getId());
+    ///TRANSACTIONS
+
+    public void addTransaction(Transaction tempTransaction) {
+        mainController.addTransaction(tempTransaction);
+        updateData();
     }
 
-    public void deleteAccount(Account selectedAccount) {
-        dbHandler.deleteAccount(selectedAccount.getId());
+    public void editTransaction(Transaction selectedTransaction) {
+        mainController.editTransaction(selectedTransaction);
+        updateData();
+    }
+
+    public void removeTransaction(Transaction selectedTransaction) {
+        mainController.removeTransaction(selectedTransaction);
+        updateData();
     }
 
     //********** Gestão de dados **********//
@@ -307,8 +315,14 @@ public class DesktopApp extends Application {
      *
      * @return Devolve ObservableList do dados de movimentos.
      */
-    public ObservableList<Transaction> getTransactions() {
-        return transactionsObservableList;
+    public ObservableList<Transaction> getTransactions(int accountIdSelected) {
+        Account account = mainController.getAccountById(accountIdSelected);
+        if (account != null) {
+            transactionsObservableList.clear();
+            transactionsObservableList.addAll(account.getTransactions());
+            return transactionsObservableList;
+        }
+        return null;
     }
 
     /**
@@ -319,6 +333,7 @@ public class DesktopApp extends Application {
     public ObservableList<Account> getAccounts() {
         return accountsObservableList;
     }
+
 
     //************* Outros ****************//
 //

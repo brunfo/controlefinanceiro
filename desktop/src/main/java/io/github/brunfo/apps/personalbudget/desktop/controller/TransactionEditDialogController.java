@@ -68,7 +68,7 @@ public class TransactionEditDialogController implements EditDialogController {
      */
     public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
-        accountComboBox.setValue(desktopApp.getAccounts().get(transaction.getAccountId()));
+        accountComboBox.setValue(desktopApp.getAccountById(transaction.getAccountId()));
         operationDatePicker.setValue(transaction.getOperationDate());
         transactionDatePicker.setValue(transaction.getTransactionDate());
         descriptionTextField.setText(transaction.getDescription());

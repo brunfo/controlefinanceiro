@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 public class TransactionOverviewController implements OverviewController {
 
-    private static int lastEditedAccount = -1;
+    private static int lastEditedAccount = 0;
     @FXML
     private TableView<Transaction> transactionTableView;
     @FXML
@@ -40,7 +40,6 @@ public class TransactionOverviewController implements OverviewController {
     @FXML
     private Label transactionDateLabel;
     private int predefinedAccount;
-    private int accountIdSelected = 0;
     private DesktopApp desktopApp;
 
 
@@ -125,7 +124,8 @@ public class TransactionOverviewController implements OverviewController {
         int selectedIndex = transactionTableView.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
             Transaction transaction = transactionTableView.getSelectionModel().getSelectedItem();
-            desktopApp.deleteTransaction(transaction);
+            lastEditedAccount = transaction.getAccountId();
+            desktopApp.removeTransaction(transaction);
             transactionTableView.getItems().remove(selectedIndex);
         } else {
             noSelection();
@@ -141,7 +141,8 @@ public class TransactionOverviewController implements OverviewController {
         Transaction tempTransaction = new Transaction();
         boolean okClicked = desktopApp.showTransactionEditDialog(tempTransaction);
         if (okClicked) {
-            desktopApp.saveTransaction(tempTransaction);
+            lastEditedAccount = tempTransaction.getAccountId();
+            desktopApp.addTransaction(tempTransaction);
         }
     }
 
@@ -156,7 +157,8 @@ public class TransactionOverviewController implements OverviewController {
             boolean okClicked = desktopApp.showTransactionEditDialog(selectedTransaction);
             if (okClicked) {
                 showTransactionDetails(selectedTransaction);
-                desktopApp.updateTransaction(selectedTransaction);
+                lastEditedAccount = selectedTransaction.getAccountId();
+                desktopApp.editTransaction(selectedTransaction);
             }
         } else {
             noSelection();
@@ -166,26 +168,23 @@ public class TransactionOverviewController implements OverviewController {
     @FXML
     private void handleSelectTransaction() {
         Transaction selectedTransaction = transactionTableView.getSelectionModel().getSelectedItem();
+        if (selectedTransaction != null)
+            lastEditedAccount = selectedTransaction.getAccountId();
         showTransactionDetails(selectedTransaction);
     }
 
     @FXML
     private void updateTableView() {
-        accountIdSelected = accountComboBox.getItems().get(0).getId();
-        accountIdSelected = accountComboBox.getSelectionModel().getSelectedItem().getId();
+        lastEditedAccount = accountComboBox.getSelectionModel().getSelectedItem().getId();
         updateData();
     }
 
-    private boolean test(Transaction filter) {
-        return filter.getAccountId() == accountIdSelected;
-    }
 
     private void updateData() {
         // Adiciona os dados da observable list na tabela
-        transactionTableView.setItems(desktopApp.getTransactions().filtered(this::test));
+        transactionTableView.setItems(desktopApp.getTransactions(lastEditedAccount));
         transactionTableView.getItems();
     }
-
 
     /**
      * Mensagem de erro quando nada está selecionado.

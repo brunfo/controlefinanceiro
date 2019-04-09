@@ -18,8 +18,7 @@ public class Controller {
     private Budgets budgets;
 
     private Controller() {
-        accounts = new Accounts();
-        budgets = new Budgets();
+        loadDataFromDatabase();
     }
 
     /**
@@ -52,16 +51,6 @@ public class Controller {
     }
 
     /**
-     * Adds a account to the list.
-     *
-     * @param tempAccount account.
-     * @return true if success.
-     */
-    public boolean addAccount(Account tempAccount) {
-        return accounts.addAccount(tempAccount);
-    }
-
-    /**
      * Return a account width the specified name.
      *
      * @param accountName name of the account.
@@ -82,6 +71,29 @@ public class Controller {
     }
 
     /**
+     * Adds a account to the list.
+     *
+     * @param tempAccount account.
+     * @return true if success.
+     */
+    public boolean addAccount(Account tempAccount) {
+        //saves the transaction to db
+        int id = dbHandler.addAccount(tempAccount);
+        if (id >= 0) {
+            tempAccount.setId(id);
+            return accounts.addAccount(tempAccount);
+        }
+        return false;
+    }
+
+    /**
+     * Edits the name of a account
+     */
+    public boolean editAccount(Account account) {
+        return dbHandler.editAccount(account);
+    }
+
+    /**
      * Removes a account from the list.
      *
      * @param account account to be removed.
@@ -91,6 +103,8 @@ public class Controller {
         return accounts.removeAccount(account);
     }
 
+    //********************* Transactions ***********************//
+
     /**
      * Adds a transaction to a account.
      *
@@ -99,13 +113,37 @@ public class Controller {
      */
     public boolean addTransaction(Transaction tempTransaction) {
         //saves transactions to database and gets the id
-        int id = dbHandler.saveTransaction(tempTransaction);
+        int id = dbHandler.addTransaction(tempTransaction);
         if (id >= 0) {
             tempTransaction.setId(id);
             return accounts.addTransaction(tempTransaction);
         }
         return false;
     }
+
+    /**
+     * Edits a transaction.
+     *
+     * @param transaction the transaction
+     * @return true if success.
+     */
+    public boolean editTransaction(Transaction transaction) {
+        return changeTransactionAccount(transaction,
+                accounts.getAccountById(transaction.getAccountId()));
+    }
+
+    /**
+     * Removes a transaction from a account.
+     *
+     * @param transaction transaction.
+     * @return true if success.
+     */
+    public boolean removeTransaction(Transaction transaction) {
+        if (dbHandler.removeTrasaction(transaction.getId()))
+            return accounts.removeTransaction(transaction);
+        return false;
+    }
+
 
     public boolean transferToAccount(Transaction tempTransaction, Account destinyAccount) {
         Account originAccount = accounts.getAccountById(tempTransaction.getAccountId());
@@ -130,8 +168,8 @@ public class Controller {
             //TODO change this method to a rollback
             //the transfer had failed if has reached this point,
             // it reverts  any entry in the database
-            dbHandler.deleteTransaction(originTransaction.getId());
-            dbHandler.deleteTransaction(destinyTransaction.getId());
+            dbHandler.removeTrasaction(originTransaction.getId());
+            dbHandler.removeTrasaction(destinyTransaction.getId());
         }
         return false;
     }
@@ -143,9 +181,9 @@ public class Controller {
      * @param account     the new account.
      * @return true if success.
      */
-    public boolean changeAccount(Transaction transaction, Account account) {
+    public boolean changeTransactionAccount(Transaction transaction, Account account) {
         Transaction tempTransaction = copyTransaction(transaction);
-        if (accounts.changeAccount(transaction, account)) {
+        if (accounts.editTransactionAccount(transaction, account)) {
             if (!dbHandler.editTransaction(transaction))
                 transaction = tempTransaction;
             else
@@ -160,19 +198,11 @@ public class Controller {
      * @param transaction transaction to be copied.
      * @return copy of transaction.
      */
-    public Transaction copyTransaction(Transaction transaction) {
+    Transaction copyTransaction(Transaction transaction) {
         return accounts.copyTransaction(transaction);
     }
 
-    /**
-     * Removes a transaction from a account.
-     *
-     * @param transaction transaction.
-     * @return true if success.
-     */
-    public boolean removeTransaction(Transaction transaction) {
-        return accounts.removeTransaction(transaction);
-    }
+
 
 
     //********************* Budgets ***********************//

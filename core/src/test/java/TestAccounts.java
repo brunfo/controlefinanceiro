@@ -54,7 +54,7 @@ public class TestAccounts {
         printAccountTransactions(controller.getAccount("Conta 2"));
 
         System.out.println("\n\n\tchange transaction to a nonexistent account");
-        controller.changeAccount(transaction, controller.getAccount("Conta 3"));
+        controller.changeTransactionAccount(transaction, controller.getAccount("Conta 3"));
 
 
         printAccountTransactions(controller.getAccount("Conta 1"));

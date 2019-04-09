@@ -9,11 +9,11 @@ public class TestDB {
 
     public static void main(String[] args) {
 
-        printAccounts();
+        // printAccounts();
 
         controller.loadDataFromDatabase();
 
-        printAccounts();
+        // printAccounts();
 
         Transaction transaction = new Transaction();
         transaction.setDescription("transferencia");
@@ -23,21 +23,23 @@ public class TestDB {
 
         //printAccounts();
 
-        //controller.changeAccount(transaction,controller.getAccountById(5));
+        //controller.changeTransactionAccount(transaction,controller.getAccountById(5));
 
-        controller.transferToAccount(transaction, controller.getAccountById(5));
-        printAccounts();
+        controller.transferToAccount(transaction,
+                controller.getAccountById(5));
+        //printAccounts();
 
     }
 
-    static void printAccounts() {
+
+    void printAccounts() {
         if (controller.getAccounts() != null)
-            for (Account acount : controller.getAccounts()) {
-                printAccountTransactions(acount);
+            for (Account account : controller.getAccounts()) {
+                printAccountTransactions(account);
             }
     }
 
-    static void printAccountTransactions(Account account) {
+    void printAccountTransactions(Account account) {
         System.out.println("\n*************************************************************");
         System.out.println("Account : " + account.getName());
         System.out.println("-------------------------------------------------------------");
@@ -49,4 +51,5 @@ public class TestDB {
         System.out.println("Saldo : " + account.getBalance());
         System.out.println("*************************************************************\n");
     }
+
 }

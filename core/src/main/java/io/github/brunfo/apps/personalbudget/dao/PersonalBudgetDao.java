@@ -9,18 +9,18 @@ public interface PersonalBudgetDao {
 
     List<Transaction> getTransactions();
 
-    boolean deleteTransaction(int id);
+    boolean removeTrasaction(int id);
 
     boolean editTransaction(Transaction transaction);
 
-    int saveTransaction(Transaction transaction);
+    int addTransaction(Transaction transaction);
 
     List<Account> getAccounts();
 
-    boolean deleteAccount(int id);
+    boolean removeAccount(int id);
 
     boolean editAccount(Account account);
 
-    int saveAccount(Account account);
+    int addAccount(Account account);
 
 }

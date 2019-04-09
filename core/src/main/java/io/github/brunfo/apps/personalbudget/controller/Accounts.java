@@ -74,7 +74,7 @@ class Accounts {
         return false;
     }
 
-    boolean changeAccount(Transaction transaction, Account account) {
+    boolean editTransactionAccount(Transaction transaction, Account account) {
         if (isAccountValid(account)) {
             Account oldAccount = getAccountById(transaction.getAccountId());
             removeTransaction(transaction);

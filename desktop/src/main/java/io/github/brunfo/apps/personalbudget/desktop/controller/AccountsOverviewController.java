@@ -41,7 +41,7 @@ public class AccountsOverviewController implements OverviewController {
         Account tempAccount = new Account();
         boolean okClicked = desktopApp.showAccountEditDialog(tempAccount);
         if (okClicked) {
-            desktopApp.saveAccount(tempAccount);
+            desktopApp.addAccount(tempAccount);
         }
     }
 
@@ -51,7 +51,7 @@ public class AccountsOverviewController implements OverviewController {
         if (selectedAccount != null) {
             boolean okClicked = desktopApp.showAccountEditDialog(selectedAccount);
             if (okClicked)
-                desktopApp.updateAccount(selectedAccount);
+                desktopApp.editAccount(selectedAccount);
         } else {
             noSelection();
         }
@@ -61,7 +61,7 @@ public class AccountsOverviewController implements OverviewController {
     private void handleDeleteAccount() {
         Account account = accountTableView.getSelectionModel().getSelectedItem();
         if (account != null) {
-            desktopApp.deleteAccount(account);
+            desktopApp.removeAccount(account);
             accountTableView.getItems().remove(account);
         } else {
             noSelection();

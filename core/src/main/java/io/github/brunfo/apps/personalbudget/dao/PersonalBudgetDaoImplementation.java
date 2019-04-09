@@ -182,7 +182,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
     }
 
     @Override
-    public boolean deleteTransaction(int id) {
+    public boolean removeTrasaction(int id) {
         PreparedStatement stmtDeleteTransaction;
         boolean bDeleted = false;
 
@@ -232,7 +232,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
     }
 
     @Override
-    public int saveTransaction(Transaction transaction) {
+    public int addTransaction(Transaction transaction) {
         int id = -1;
         PreparedStatement stmtSaveNewRecord;
         try {
@@ -259,7 +259,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
             if (sqlError.getErrorCode() == 30000 &&
                     sqlError.getSQLState().equalsIgnoreCase("42X05")) {
                 createTable("APP.TRANSACTIONS", getTableTransactionsStr());
-                id= saveTransaction(transaction);
+                id = addTransaction(transaction);
             }
             else
                 printSQLException(sqlError);
@@ -293,7 +293,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
     }
 
     @Override
-    public boolean deleteAccount(int id) {
+    public boolean removeAccount(int id) {
         PreparedStatement stmtDeleteAccount;
         boolean bDeleted = false;
 
@@ -333,7 +333,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
     }
 
     @Override
-    public int saveAccount(Account account) {
+    public int addAccount(Account account) {
         int id = -1;
         PreparedStatement stmtSaveNewRecord;
         try {
@@ -356,7 +356,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
             if (sqlError.getErrorCode() == 30000 &&
                     sqlError.getSQLState().equalsIgnoreCase("42X05")) {
                 createTable("APP.ACCOUNTS", getTableAccountsStr());
-                id= saveAccount(account);
+                id = addAccount(account);
             }
             else
                 printSQLException(sqlError);
