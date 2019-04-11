@@ -22,7 +22,7 @@ public class TransactionOverviewController implements OverviewController {
     @FXML
     private TableView<Transaction> transactionTableView;
     @FXML
-    private TableColumn<String, Double> balanceColumn;
+    private TableColumn<Transaction, Double> balanceColumn;
     @FXML
     private TableColumn<Transaction, LocalDate> operationDateColumn;
     @FXML
@@ -70,6 +70,8 @@ public class TransactionOverviewController implements OverviewController {
                 cellData -> cellData.getValue().descriptionProperty());
         amountColumn.setCellValueFactory(
                 cellData -> cellData.getValue().amountProperty());
+        balanceColumn.setCellValueFactory(
+                cellData -> cellData.getValue().balanceProperty());
 
         //adds a listener to the table content
         transactionTableView.getSelectionModel().getSelectedIndices().

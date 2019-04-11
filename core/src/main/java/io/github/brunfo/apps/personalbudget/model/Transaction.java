@@ -156,8 +156,16 @@ public class Transaction {
         return amount;
     }
 
-    public void setBalance(double balance) {
-        this.balance.setValue(balance);
+    public Double getBalance() {
+        return balance.get();
+    }
+
+    public void setBalance(Double balance) {
+        this.balance.set(balance);
+    }
+
+    public ObjectProperty<Double> balanceProperty() {
+        return balance;
     }
 
     public Map<Item, Double> getBudgetItems() {
