@@ -194,24 +194,24 @@ public class DesktopApp extends Application {
      */
     public boolean showTransactionEditDialog(Transaction selectedTransaction) {
         if (accountsObservableList.size() > 0) {
-            EditDialogController controller =
+            TransactionEditDialogController controller = (TransactionEditDialogController)
                     showEditDialog(
                             "/view/TransactionEditDialog.fxml",
                             "Editar movimento");
             if (controller != null) {
                 // Define a pessoa no overviewController.
-                ((TransactionEditDialogController) controller).setTransaction(selectedTransaction);
+                controller.setTransaction(selectedTransaction);
 
                 //TODO cria ficheiro con preferencias de conta predefinida
                 //envia preferencias de conta predefinida
-                ((TransactionEditDialogController) controller).setPredefinedAccount(0);
+                //controller.setPredefinedAccount(0);
                 //envias as contas disponiveis para selecionar
-                ((TransactionEditDialogController) controller).setAvailableAccounts(accountsObservableList);
+                controller.setAvailableAccounts(accountsObservableList);
 
                 // Mostra a janela e espera até o usuário fechar.
                 controller.getDialogStageStage().showAndWait();
 
-                return ((TransactionEditDialogController) controller).isOkClicked();
+                return controller.isOkClicked();
             }
         }
         Alert alert = new Alert(Alert.AlertType.ERROR);

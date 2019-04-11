@@ -47,7 +47,6 @@ public class TransactionOverviewController implements OverviewController {
     private Label transactionDateLabel;
 
 
-
     /**
      * The Constructor
      * The constructor is called before initialize() method.
@@ -166,9 +165,13 @@ public class TransactionOverviewController implements OverviewController {
     private void handleEditTransaction() {
         Transaction selectedTransaction = transactionTableView.getSelectionModel().getSelectedItem();
         if (selectedTransaction != null) {
+            Account oldAccount = selectedTransaction.getAccount();
             boolean okClicked = desktopApp.showTransactionEditDialog(selectedTransaction);
             if (okClicked) {
                 desktopApp.editTransaction(selectedTransaction);
+                //removes the transaction on the old account if is different
+                if (!oldAccount.equals(selectedTransaction.getAccount()))
+                    oldAccount.getTransactions().remove(selectedTransaction);
                 //sets combo box width the account of the new transaction
                 accountComboBox.setValue(selectedTransaction.getAccount());
                 //refresh the table view

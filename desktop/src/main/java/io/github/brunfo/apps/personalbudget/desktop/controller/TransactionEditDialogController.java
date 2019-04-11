@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 
 public class TransactionEditDialogController implements EditDialogController {
 
-    private static int lastEditedAccount = -1;
     @FXML // fx:id="descriptionTextField"
     private TextField descriptionTextField;
     @FXML // fx:id="accountComboBox"
@@ -29,7 +28,6 @@ public class TransactionEditDialogController implements EditDialogController {
     private Stage dialogStage;
     private Transaction transaction;
     private boolean okClicked = false;
-    private int predefinedAccount;
     private DesktopApp desktopApp;
 
 
@@ -91,14 +89,12 @@ public class TransactionEditDialogController implements EditDialogController {
     private void handleOk() {
         if (isInputValid()) {
             transaction.setAccountId(accountComboBox.getValue().getId());
+            transaction.setAccount(accountComboBox.getValue());
             transaction.setOperationDate(operationDatePicker.getValue());
             transaction.setTransactionDate(transactionDatePicker.getValue());
             transaction.setDescription(descriptionTextField.getText());
             transaction.setAmount(Double.parseDouble(amountTextField.getText()));
-
-            lastEditedAccount = accountComboBox.getSelectionModel().getSelectedIndex();
             okClicked = true;
-
             dialogStage.close();
         }
     }
@@ -163,14 +159,7 @@ public class TransactionEditDialogController implements EditDialogController {
 
     public void setAvailableAccounts(ObservableList<Account> accounts) {
         accountComboBox.setItems(accounts);
-        accountComboBox.setValue(accounts.get(predefinedAccount));
-        //se já houve uma conta transaction anterior, coms eleção de conta, mantem a mesma
-        if (lastEditedAccount != -1)
-            accountComboBox.setValue((accounts.get(lastEditedAccount)));
-    }
-
-    public void setPredefinedAccount(int index) {
-        predefinedAccount = index;
+        accountComboBox.setValue(accounts.get(accounts.indexOf(transaction.getAccount())));
     }
 
     @Override
