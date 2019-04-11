@@ -13,33 +13,33 @@ public class TestDB {
 
         controller.loadDataFromDatabase();
 
-        // printAccounts();
+        printAccounts();
 
         Transaction transaction = new Transaction();
         transaction.setDescription("transferencia");
         transaction.setAmount(200.);
         transaction.setAccountId(1);
-        //controller.addTransaction(transaction);
+        controller.addTransaction(transaction);
 
-        //printAccounts();
+        printAccounts();
 
-        //controller.changeTransactionAccount(transaction,controller.getAccountById(5));
+        controller.changeTransactionAccount(transaction, controller.getAccountById(2));
 
-        controller.transferToAccount(transaction,
-                controller.getAccountById(5));
-        //printAccounts();
+        //controller.transferToAccount(transaction,
+        //        controller.getAccountById(5));
+        printAccounts();
 
     }
 
 
-    void printAccounts() {
+    static void printAccounts() {
         if (controller.getAccounts() != null)
             for (Account account : controller.getAccounts()) {
                 printAccountTransactions(account);
             }
     }
 
-    void printAccountTransactions(Account account) {
+    static void printAccountTransactions(Account account) {
         System.out.println("\n*************************************************************");
         System.out.println("Account : " + account.getName());
         System.out.println("-------------------------------------------------------------");

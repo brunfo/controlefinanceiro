@@ -186,10 +186,7 @@ public class Controller {
     public boolean changeTransactionAccount(Transaction transaction, Account account) {
         Transaction tempTransaction = copyTransaction(transaction);
         if (accounts.editTransactionAccount(transaction, account)) {
-            if (!dbHandler.editTransaction(transaction)) {
-            }
-            else
-                return true;
+            return dbHandler.editTransaction(transaction);
         }
         return false;
     }
@@ -203,8 +200,6 @@ public class Controller {
     Transaction copyTransaction(Transaction transaction) {
         return accounts.copyTransaction(transaction);
     }
-
-
 
 
     //********************* Budgets ***********************//
