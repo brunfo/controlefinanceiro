@@ -133,6 +133,8 @@ public class RootLayoutController implements OverviewController {
         alert.setContentText("Tem a certeza que quer sair?");
         if (alert.showAndWait().get().getButtonData().isDefaultButton()) {
             System.exit(0);
+        } else {
+            return;
         }
     }
 

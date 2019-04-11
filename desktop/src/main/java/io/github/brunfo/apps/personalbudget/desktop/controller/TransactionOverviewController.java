@@ -12,7 +12,13 @@ import java.time.LocalDate;
 
 public class TransactionOverviewController implements OverviewController {
 
-    private static int lastEditedAccount = 0;
+    //preferences
+    private static int preferredAccountId;
+    //reference to the desktop app controller
+    private DesktopApp desktopApp;
+    //accounts
+    private ObservableList<Account> accountObservableList;
+
     @FXML
     private TableView<Transaction> transactionTableView;
     @FXML
@@ -39,25 +45,24 @@ public class TransactionOverviewController implements OverviewController {
     private Label operationDateLabel;
     @FXML
     private Label transactionDateLabel;
-    private int predefinedAccount;
-    private DesktopApp desktopApp;
+
 
 
     /**
-     * O construtor.
-     * O construtor é chamado antes do método inicialize().
+     * The Constructor
+     * The constructor is called before initialize() method.
      */
     public TransactionOverviewController() {
     }
 
 
     /**
-     * Inicializa a classe controller. Este método é chamado automaticamente
-     * após o arquivo fxml ter sido carregado.
+     * Initializes the class of the controller.
+     * This method is called after the FXML file is loaded.
      */
     @FXML
     private void initialize() {
-        // Inicializa a tabela de movimentos.
+        // Initializes the TableView columns.
         operationDateColumn.setCellValueFactory(
                 cellData -> cellData.getValue().operationDateProperty());
         transactionDateColumn.setCellValueFactory(
@@ -67,32 +72,30 @@ public class TransactionOverviewController implements OverviewController {
         amountColumn.setCellValueFactory(
                 cellData -> cellData.getValue().amountProperty());
 
-        //change listview observable list
+        //adds a listener to the table content
         transactionTableView.getSelectionModel().getSelectedIndices().
                 addListener((ListChangeListener<Integer>) c -> handleSelectTransaction());
     }
 
-
     /**
-     * É chamado pela aplicação principal para dar uma referência de volta a si mesmo.
+     * Sets a reference to the caller.
      *
-     * @param controller
+     * @param controller caller.
      */
     @Override
     public void setDesktopApp(DesktopApp controller) {
         this.desktopApp = controller;
-        updateData();
+        //updateData();
     }
 
     /**
-     * Preenche todos os campos de texto para mostrar detalhes sobre a pessoa.
-     * Se a pessoa especificada for null, todos os campos de texto são limpos.
+     * Fills all text fields to show details of a transaction.
      *
-     * @param transaction a pessoa ou null
+     * @param transaction a transaction
      */
     private void showTransactionDetails(Transaction transaction) {
         if (transaction != null) {
-            // Preenche as labels com informações do objeto transaction.
+            // Fills the labels with transaction object information.
             idLabel.setText((String.valueOf((transaction.getId()))));
             String accountName = null;
             for (Account p : desktopApp.getAccounts()) {
@@ -106,7 +109,7 @@ public class TransactionOverviewController implements OverviewController {
             descriptionLabel.setText(transaction.getDescription());
             amountLabel.setText(String.valueOf(transaction.getAmount()));
         } else {
-            // Transaction é null, remove todo o texto.
+            // Transaction is null, clear all text.
             idLabel.setText("");
             accountLabel.setText("");
             operationDateLabel.setText("");
@@ -117,14 +120,14 @@ public class TransactionOverviewController implements OverviewController {
     }
 
     /**
-     * Chamado quando o usuário clica no botão delete.
+     * Called when the user clicks the delete button.
      */
     @FXML
     private void handleDeleteTransaction() {
         int selectedIndex = transactionTableView.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
-            Transaction transaction = transactionTableView.getSelectionModel().getSelectedItem();
-            lastEditedAccount = transaction.getAccountId();
+            Transaction transaction =
+                    transactionTableView.getSelectionModel().getSelectedItem();
             desktopApp.removeTransaction(transaction);
             transactionTableView.getItems().remove(selectedIndex);
         } else {
@@ -133,22 +136,31 @@ public class TransactionOverviewController implements OverviewController {
     }
 
     /**
-     * Chamado quando o usuário clica no botão novo. Abre uma janela para editar
-     * detalhes do novo movimento.
+     * Called when the user clicks the new button.
+     * Opens a window to edit details of the new transaction.
      */
     @FXML
     private void handleNewTransaction() {
+        //creates new transaction
         Transaction tempTransaction = new Transaction();
+        //sets the account id of the active value of the combo box
+        tempTransaction.setAccountId(
+                accountComboBox.getSelectionModel().getSelectedItem().getId());
         boolean okClicked = desktopApp.showTransactionEditDialog(tempTransaction);
         if (okClicked) {
-            lastEditedAccount = tempTransaction.getAccountId();
+            //adds transaction to the storage
             desktopApp.addTransaction(tempTransaction);
+            //sets combo box width the account of the new transaction
+            accountComboBox.setValue(tempTransaction.getAccount());
+            //refresh the table view
+            refreshTableView(
+                    accountObservableList.indexOf(tempTransaction.getAccount()));
         }
     }
 
     /**
-     * Chamado quando o usuário clica no botão edit. Abre a janela para editar
-     * detalhes de um movimento selecionado.
+     * Called when the user clicks the edit button.
+     * Opens the edit window details of a selected transaction.
      */
     @FXML
     private void handleEditTransaction() {
@@ -156,59 +168,96 @@ public class TransactionOverviewController implements OverviewController {
         if (selectedTransaction != null) {
             boolean okClicked = desktopApp.showTransactionEditDialog(selectedTransaction);
             if (okClicked) {
-                showTransactionDetails(selectedTransaction);
-                lastEditedAccount = selectedTransaction.getAccountId();
                 desktopApp.editTransaction(selectedTransaction);
+                //sets combo box width the account of the new transaction
+                accountComboBox.setValue(selectedTransaction.getAccount());
+                //refresh the table view
+                refreshTableView(
+                        accountObservableList.indexOf(selectedTransaction.getAccount()));
             }
         } else {
             noSelection();
         }
     }
 
+    /**
+     * Called when user selects a transaction.
+     * It shows more details of the selected transaction.
+     */
     @FXML
     private void handleSelectTransaction() {
         Transaction selectedTransaction = transactionTableView.getSelectionModel().getSelectedItem();
-        if (selectedTransaction != null)
-            lastEditedAccount = selectedTransaction.getAccountId();
-        showTransactionDetails(selectedTransaction);
+        if (selectedTransaction != null) {
+            showTransactionDetails(selectedTransaction);
+        }
     }
 
+    /**
+     * This method is called when the user change the selection of the combo box.
+     * Updates the content of the table view.
+     */
     @FXML
     private void updateTableView() {
-        lastEditedAccount = accountComboBox.getSelectionModel().getSelectedItem().getId();
-        updateData();
+        //assigns the selected account
+        int index = accountComboBox.getSelectionModel().getSelectedIndex();
+        if (index >= 0)
+            refreshTableView(index);
     }
 
+    /**
+     * Error message when nothing is selected.
+     */
+    private void noSelection() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("No selection");
+        alert.setHeaderText("No transaction selected");
+        alert.setContentText("Please select a transaction in the table.");
+        alert.showAndWait();
+    }
 
-    private void updateData() {
-        // Adiciona os dados da observable list na tabela
-        transactionTableView.setItems(desktopApp.getTransactions(lastEditedAccount));
+    /**
+     * Sets the available accounts.
+     * Fills the combo box and shows the transactions of selected account.
+     * Try to set the preferred account.
+     *
+     * @param accounts List of accounts.
+     */
+    public void setAvailableAccounts(ObservableList<Account> accounts) {
+        this.accountObservableList = accounts;
+        //sets combo box accountObservableList
+        accountComboBox.setItems(accounts);
+
+        //if preferred accountId is valid sets that account,
+        // else sets the first in the list
+        int accountIndex = accounts.indexOf(
+                desktopApp.getAccountById(preferredAccountId));
+        if (accountIndex < 0) {
+            accountIndex = 0;
+        }
+        //sets the value to show
+        accountComboBox.setValue(accounts.get(accountIndex));
+        refreshTableView(accountIndex);
+    }
+
+    /**
+     * Refresh data of TableView width the selected account
+     *
+     * @param accountIndex the account index
+     */
+    private void refreshTableView(int accountIndex) {
+        transactionTableView.setItems(
+                desktopApp.getTransactions(
+                        accountObservableList.get(accountIndex).getId()));
         transactionTableView.getItems();
     }
 
     /**
-     * Mensagem de erro quando nada está selecionado.
+     * Sets the preferred account.
+     *
+     * @param accountId the preferred account id.
      */
-    private void noSelection() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Nenhuma seleção");
-        alert.setHeaderText("Nenhuma movimento selecionado");
-        alert.setContentText("Por favor, selecione um movimento na tabela.");
-        alert.showAndWait();
-    }
-
-    public void setAvailableAccounts(ObservableList<Account> accountsData) {
-        accountComboBox.setItems(accountsData);
-        accountComboBox.setValue(accountsData.get(predefinedAccount));
-        //se já houve uma conta movimento anterior, coms eleção de conta, mantem a mesma
-        if (lastEditedAccount != -1) {
-            accountComboBox.setValue((accountsData.get(lastEditedAccount)));
-        }
-        updateTableView();
-    }
-
-    public void setPredefinedAccount(int index) {
-        predefinedAccount = index;
+    public void setPreferredAccount(int accountId) {
+        preferredAccountId = accountId;
     }
 
 }

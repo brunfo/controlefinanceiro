@@ -60,6 +60,8 @@ class Accounts {
      */
     boolean addTransaction(Transaction tempTransaction) {
         Account account = getAccountById(tempTransaction.getAccountId());
+        //add this account a reference to the transaction;
+        tempTransaction.setAccount(account);
         //Verifies if is possible to make the transaction
         if (isAccountValid(account) &&
                 (account.getBalance() + tempTransaction.getAmount() >= 0 ||

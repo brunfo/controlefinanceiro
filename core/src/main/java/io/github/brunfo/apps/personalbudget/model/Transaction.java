@@ -22,6 +22,7 @@ public class Transaction {
     private final ObjectProperty<Double> amount;
     private final ObjectProperty<Double> balance;
     private Map<Item, Double> budgetItems;
+    private Account account;
 
     /**
      * Constructor
@@ -89,6 +90,14 @@ public class Transaction {
 
     public Integer getAccountId() {
         return accountId.get();
+    }
+
+    public Account getAccount() {
+        return this.account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public void setAccountId(Integer accountId) {

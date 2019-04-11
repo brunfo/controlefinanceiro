@@ -17,6 +17,7 @@ public class Controller {
     //controller of the budgets
     private Budgets budgets;
 
+
     private Controller() {
         loadDataFromDatabase();
     }
@@ -39,6 +40,7 @@ public class Controller {
         accounts.setAccounts(dbHandler.getAccounts());
         accounts.setTransactionsToAccounts(dbHandler.getTransactions());
     }
+
     //********************* Accounts ***********************//
 
     /**
@@ -184,8 +186,8 @@ public class Controller {
     public boolean changeTransactionAccount(Transaction transaction, Account account) {
         Transaction tempTransaction = copyTransaction(transaction);
         if (accounts.editTransactionAccount(transaction, account)) {
-            if (!dbHandler.editTransaction(transaction))
-                transaction = tempTransaction;
+            if (!dbHandler.editTransaction(transaction)) {
+            }
             else
                 return true;
         }

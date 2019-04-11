@@ -105,7 +105,6 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
         try {
             stmtDelete = dbConnection.createStatement();
             stmtDelete.executeUpdate("DROP table " + table);
-            dbDeletedTable = true;
         } catch (SQLException sqlError) {
             sqlError.printStackTrace();
         }

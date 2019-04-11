@@ -19,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 /**
  * Classe principal. Esta classe é a classe principal que funciona de entrada,
@@ -27,25 +28,25 @@ import java.io.IOException;
  */
 public class DesktopApp extends Application {
 
-    //the Main mainController
-    Controller mainController = Controller.getInstance();
     //database handler
     private static final PersonalBudgetDao dbHandler = PersonalBudgetDaoImplementation.getInstance();
     public final String TITLE = "Personal Budget";
     public final String VERSION = "1.1-SNAPSHOT";
-    private Stage primaryStage;
-    private BorderPane rootLayout;
     /**
      * Os dados como uma observable list de Transactions.
      */
     private final ObservableList<Transaction> transactionsObservableList = FXCollections.observableArrayList();
     private final ObservableList<Account> accountsObservableList = FXCollections.observableArrayList();
+    //the Main mainController
+    private Controller mainController = Controller.getInstance();
+    private Stage primaryStage;
+    private BorderPane rootLayout;
+    private String preferredAccount = "preferredAccount";
 
     /**
      * Construtor
      */
     public DesktopApp() {
-
     }
 
     //******* Genérico ********//
@@ -66,7 +67,7 @@ public class DesktopApp extends Application {
         showTransactionsOverview();
     }
 
-    // ********** Configurações ***********//
+    // ********** Config ***********//
 
     /**
      * Retorna o palco principal.
@@ -77,7 +78,7 @@ public class DesktopApp extends Application {
         return primaryStage;
     }
 
-    //******** Controlo de vistas *********//
+    //******** Controllers view *********//
 
     /**
      * Inicializa o root layout e tenta carregar o último arquivo
@@ -104,6 +105,9 @@ public class DesktopApp extends Application {
             e.printStackTrace();
         }
         //Carega os dados da base dados
+
+        accountsObservableList.clear();
+        accountsObservableList.addAll(mainController.getAccounts());
         updateData();
     }
 
@@ -164,19 +168,19 @@ public class DesktopApp extends Application {
     }
 
     /**
-     * Mostra lista de movimentos
+     * Show transactions over view
      */
     public void showTransactionsOverview() {
+        //sets the controller
         TransactionOverviewController controller =
                 (TransactionOverviewController) showOverview("/view/TransactionsOverview.fxml");
 
         if (controller != null) {
             if (accountsObservableList.size() > 0) {
-                //envias as contas disponiveis para selecionar
-                controller.setAvailableAccounts(accountsObservableList);
-                //TODO cria ficheiro con preferencias de conta predefinida
-                //envia preferencias de conta predefinida
-                controller.setPredefinedAccount(accountsObservableList.get(0).getId());
+                //sets preferred account to the view controller
+                controller.setPreferredAccount(getPreferredAccountId());
+                //sets the available account to the view controller
+                controller.setAvailableAccounts(this.getAccounts());
             }
         }
     }
@@ -266,8 +270,12 @@ public class DesktopApp extends Application {
      */
     private void updateData() {
         //passa os dados para a ObservableList
-        accountsObservableList.clear();
-        accountsObservableList.addAll(mainController.getAccounts());
+        try {
+            accountsObservableList.clear();
+            accountsObservableList.addAll(mainController.getAccounts());
+        } catch (Exception error) {
+            System.out.println("Update data: " + error.getCause() + " : " + error.getMessage());
+        }
     }
 
     ///ACCOUNTS
@@ -336,44 +344,31 @@ public class DesktopApp extends Application {
 
 
     //************* Outros ****************//
-//
-//    /**
-//     * Retorna o arquivo de preferências do movimento, o último arquivo que foi aberto.
-//     * As preferências são lidas do registro específico do SO (Sistema Operacional).
-//     * Se tais prefêrencias não puderem  ser encontradas, ele retorna null.
-//     *
-//     * @return
-//     */
-//    public File getTransactionFilePath() {
-//        Preferences prefs = Preferences.userNodeForPackage(DesktopApp.class);
-//        String filePath = prefs.get("filePath", null);
-//        if (filePath != null) {
-//            return new File(filePath);
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * Define o caminho do arquivo do arquivo carregado atual. O caminho é persistido no
-//     * registro específico do SO (Sistema Operacional).
-//     *
-//     * @param file O arquivo ou null para remover o caminho
-//     */
-//    private void setTransactionFilePath(File file) {
-//        Preferences prefs = Preferences.userNodeForPackage(DesktopApp.class);
-//        if (file != null) {
-//            prefs.put("filePath", file.getPath());
-//
-//            // Update the stage title.
-//            primaryStage.setTitle("AddressApp - " + file.getName());
-//        } else {
-//            prefs.remove("filePath");
-//
-//            // Update the stage title.
-//            primaryStage.setTitle("AddressApp");
-//        }
-//    }
+
+    /**
+     * Get the preferred account id.
+     *
+     * @return Int accountId or -1 if not defined.
+     */
+    private int getPreferredAccountId() {
+        Preferences prefs = Preferences.userNodeForPackage(this.getClass());
+
+        return prefs.getInt(preferredAccount, -1);
+    }
+
+    /**
+     * Sets a preferred accountId
+     *
+     * @param accountId AccountID
+     */
+    private void setPreferedAccountId(int accountId) {
+        Preferences prefs = Preferences.userNodeForPackage(this.getClass());
+        if (preferredAccount != null & accountId >= 0) {
+            prefs.putInt(preferredAccount, accountId);
+        } else {
+            prefs.remove(preferredAccount);
+        }
+    }
 //
 //    /**
 //     * Carrega os dados da pessoa do arquivo especificado. A pessoa atual
