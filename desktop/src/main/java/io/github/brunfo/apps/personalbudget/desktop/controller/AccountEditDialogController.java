@@ -25,8 +25,8 @@ public class AccountEditDialogController implements EditDialogController {
 
 
     /**
-     * Inicializa a classe controlle. Este método é chamado automaticamente
-     * após o arquivo fxml ter sido carregado.
+     * Initialize the controller class. This method is called automatically
+     * after the fxml file has been loaded.
      */
     @FXML
     private void initialize() {
@@ -34,7 +34,7 @@ public class AccountEditDialogController implements EditDialogController {
 
 
     /**
-     * Define o palco deste dialog.
+     * Defines the stage of this dialog.
      *
      * @param dialogStage
      */
@@ -48,7 +48,7 @@ public class AccountEditDialogController implements EditDialogController {
     }
 
     /**
-     * Define a pessoa a ser editada no dialog.
+     * Defines a account to be edited.
      *
      * @param account
      */
@@ -59,7 +59,7 @@ public class AccountEditDialogController implements EditDialogController {
     }
 
     /**
-     * Retorna true se o usuário clicar OK,caso contrário false.
+     * Return true if user click OK, otherwise false.
      *
      * @return
      */
@@ -68,7 +68,7 @@ public class AccountEditDialogController implements EditDialogController {
     }
 
     /**
-     * Chamado quando o usuário clica OK.
+     * Called when user click OK.
      */
     @FXML
     private void handleOk() {
@@ -82,7 +82,7 @@ public class AccountEditDialogController implements EditDialogController {
     }
 
     /**
-     * Chamado quando o usuário clica Cancel.
+     * Called when user click Cancel.
      */
     @FXML
     private void handleCancel() {
@@ -90,29 +90,29 @@ public class AccountEditDialogController implements EditDialogController {
     }
 
     /**
-     * Valida a entrada do usuário nos campos de texto.
+     * Validate user input in text fields.
      *
-     * @return true se a entrada é válida
+     * @return true if input is valid.
      */
     private boolean isInputValid() {
         String errorMessage = "";
 
         if (nameTextField.getText() == null || nameTextField.getText().length() == 0) {
-            errorMessage += "Nome inválido!\n";
+            errorMessage += "Invalid name!\n";
         }
-        //verifica se nome já está em uso
+        //verifies if name is in use
         for (Account _account : desktopApp.getAccounts()) {
             if (Objects.requireNonNull(nameTextField.getText()).equalsIgnoreCase(_account.getName()))
-                errorMessage = "Nome inválido, já em uso!\n";
+                errorMessage = "Invalid name, already in use!\n";
         }
 
         if (errorMessage.length() == 0) {
             return true;
         } else {
-            // Mostra a mensagem de erro.
+            // Show error message.
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Campos Inválidos");
-            alert.setHeaderText("Por favor, corrija os campos inválidos");
+            alert.setTitle("Invalid fields!");
+            alert.setHeaderText("Please, correct invalid input.");
             alert.setContentText(errorMessage);
             alert.showAndWait();
             return false;

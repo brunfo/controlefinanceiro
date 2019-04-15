@@ -1,8 +1,6 @@
 package io.github.brunfo.apps.personalbudget.desktop;
 
 import io.github.brunfo.apps.personalbudget.controller.Controller;
-import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDao;
-import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDaoImplementation;
 import io.github.brunfo.apps.personalbudget.desktop.controller.*;
 import io.github.brunfo.apps.personalbudget.model.Account;
 import io.github.brunfo.apps.personalbudget.model.Transaction;
@@ -22,34 +20,32 @@ import java.io.IOException;
 import java.util.prefs.Preferences;
 
 /**
- * Classe principal. Esta classe é a classe principal que funciona de entrada,
- * como também de mainController de toda a App.
- * Toda a gestão de vistas como de dados tem de passar por esta classe.
+ * Main class. This class is the main class that works as entry point,
+ * as well as graphic controller of the entire App.
+ * All views management as data has to go through this class.
  */
 public class DesktopApp extends Application {
 
-    //database handler
-    private static final PersonalBudgetDao dbHandler = PersonalBudgetDaoImplementation.getInstance();
     public final String TITLE = "Personal Budget";
     public final String VERSION = "1.1-SNAPSHOT";
     /**
-     * Os dados como uma observable list de Transactions.
+     * The data as an observable list of Transactions.
      */
     private final ObservableList<Transaction> transactionsObservableList = FXCollections.observableArrayList();
     private final ObservableList<Account> accountsObservableList = FXCollections.observableArrayList();
-    //the Main mainController
+    //the Main Controller
     private Controller mainController = Controller.getInstance();
     private Stage primaryStage;
     private BorderPane rootLayout;
     private String preferredAccount = "preferredAccount";
 
     /**
-     * Construtor
+     * Constructor
      */
     public DesktopApp() {
     }
 
-    //******* Genérico ********//
+    //******* Generic ********//
     public static void main(String[] args) {
         launch(args);
     }
@@ -60,6 +56,7 @@ public class DesktopApp extends Application {
         this.primaryStage.setTitle(this.TITLE);
 
         // Set the application icon.
+        //noinspection SpellCheckingInspection
         this.primaryStage.getIcons().add(new Image("/img/iconfinder_Address_Book_86957.png"));
 
         initRootLayout();
@@ -70,9 +67,9 @@ public class DesktopApp extends Application {
     // ********** Config ***********//
 
     /**
-     * Retorna o palco principal.
+     * Gets the primary stage of the app.
      *
-     * @return Devolve o Stage principal
+     * @return primary stage
      */
     public Stage getPrimaryStage() {
         return primaryStage;
@@ -81,22 +78,21 @@ public class DesktopApp extends Application {
     //******** Controllers view *********//
 
     /**
-     * Inicializa o root layout e tenta carregar o último arquivo
-     * de pessoa aberto.
+     * Initializes the root layout and attempts to load the data.
      */
     private void initRootLayout() {
         try {
-            // Carrega o root layout do arquivo fxml.
+            // Loads the layout of the fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(DesktopApp.class
                     .getResource("/view/RootLayout.fxml"));
             rootLayout = loader.load();
 
-            // Mostra a scene (cena) contendo o root layout.
+            // Shows the scene of the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
 
-            // Dá ao mainController o acesso ao main app.
+            // Gives access to this class to the layout controller.
             RootLayoutController controller = loader.getController();
             controller.setDesktopApp(this);
 
@@ -104,8 +100,7 @@ public class DesktopApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //Carega os dados da base dados
-
+        //Loads data from data base
         accountsObservableList.clear();
         accountsObservableList.addAll(mainController.getAccounts());
         updateData();
@@ -114,15 +109,15 @@ public class DesktopApp extends Application {
 
     private OverviewController showOverview(String overview) {
         try {
-            //Carrega o setup
+            //Load the setup overview
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(DesktopApp.class.getResource(overview));
             AnchorPane setup = loader.load();
 
-            //Define setup no centro do root layout
+            //Sets setup overview in the center of the root layout.
             rootLayout.setCenter(setup);
 
-            //Dá ao controlador acesso à main app
+            //Gives access to this class to the layout controller.
             OverviewController controller = loader.getController();
             controller.setDesktopApp(this);
             return controller;
@@ -135,13 +130,12 @@ public class DesktopApp extends Application {
 
     private EditDialogController showEditDialog(String editDialog, String title) {
         try {
-            // Carrega o arquivo fxml e cria um novo stage para a janela popup.
+            // Load the show edit overview as pop up window
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(DesktopApp.class.getResource(editDialog));
             AnchorPane page = loader.load();
 
-            // Cria o palco dialogStage.
-
+            // Creates new stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle(title);
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -149,7 +143,7 @@ public class DesktopApp extends Application {
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
-            // Define a pessoa no mainController.
+            // Gives access to this class to the layout controller.
             EditDialogController controller = loader.getController();
             controller.setDesktopApp(this);
             controller.setDialogStage(dialogStage);
@@ -161,7 +155,7 @@ public class DesktopApp extends Application {
     }
 
     /**
-     * Mostra o Dashboard
+     * Shows o Dashboard
      */
     public void showDashBoard() {
         showOverview("/view/DashBoard.fxml");
@@ -186,65 +180,62 @@ public class DesktopApp extends Application {
     }
 
     /**
-     * Abre uma janela para editar detalhes para a pessoa especificada. Se o usuário clicar
-     * OK, as mudanças são salvasno objeto movimento fornecido e retorna true.
+     * Opens a window to edit details of a specified transaction. If the user clicks
+     * OK, the changes are saved in the provided object and returns true.
      *
-     * @param selectedTransaction O objeto movimento a ser editado
-     * @return true Se o usuário clicou OK,  caso contrário false.
+     * @param selectedTransaction The transaction object to be edited
+     * @return true ff the user clicked OK, otherwise false.
      */
     public boolean showTransactionEditDialog(Transaction selectedTransaction) {
         if (accountsObservableList.size() > 0) {
             TransactionEditDialogController controller = (TransactionEditDialogController)
                     showEditDialog(
                             "/view/TransactionEditDialog.fxml",
-                            "Editar movimento");
+                            "Edit transaction");
             if (controller != null) {
-                // Define a pessoa no overviewController.
+                // Sets the transaction on the overviewController.
                 controller.setTransaction(selectedTransaction);
 
-                //TODO cria ficheiro con preferencias de conta predefinida
-                //envia preferencias de conta predefinida
-                //controller.setPredefinedAccount(0);
-                //envias as contas disponiveis para selecionar
+                //sets the available accounts to select
                 controller.setAvailableAccounts(accountsObservableList);
 
-                // Mostra a janela e espera até o usuário fechar.
+                // Shows the window and waits until the user closes.
                 controller.getDialogStageStage().showAndWait();
 
                 return controller.isOkClicked();
             }
         }
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Nenhuma conta");
-        alert.setHeaderText("Erro");
-        alert.setContentText("Não existe ainda nenhuma conta criada!\nPara adicionar movimentos tem de ter pelo menos 1 conta!");
+        alert.setTitle("No account");
+        alert.setHeaderText("Error");
+        alert.setContentText("There is no account defined!\nTo add a transaction you have to have at least one account!");
         alert.showAndWait();
         return false;
     }
 
     /**
-     * Mostra o Accounts
+     * Shows the Accounts overview
      */
     public void showAccountsOverview() {
         showOverview("/view/AccountsOverview.fxml");
     }
 
     /**
-     * Abre uma janela para editar detalhes para a pessoa especificada. Se o usuário clicar
-     * OK, as mudanças são salvasno objeto movimento fornecido e retorna true.
+     * Opens a popup window to edit details of a account.
+     * If user click OK, saves the changes..
      *
-     * @param selectedAccount O objeto movimento a ser editado
-     * @return true Se o usuário clicou OK,  caso contrário false.
+     * @param selectedAccount The selected account.
+     * @return true If user clicks OK,  otherwise false.
      */
     public boolean showAccountEditDialog(Account selectedAccount) {
         EditDialogController controller =
                 showEditDialog(
                         "/view/AccountEditDialog.fxml",
-                        "Editar conta");
+                        "Edit Account");
         if (controller != null) {
             ((AccountEditDialogController) controller).setAccount(selectedAccount);
 
-            // Mostra a janela e espera até o usuário fechar.
+            // Shoes.
             controller.getDialogStageStage().showAndWait();
 
             return ((AccountEditDialogController) controller).isOkClicked();
@@ -253,7 +244,7 @@ public class DesktopApp extends Application {
     }
 
     /**
-     * Mostra o Setup
+     * Show Setup overview
      */
     public void showSetup() {
         showOverview("/view/Setup.fxml");
@@ -263,13 +254,12 @@ public class DesktopApp extends Application {
         showOverview("/view/Budget.fxml");
     }
 
-    //***** Controlo de base de dados *****//
+    //***** data management *****//
 
     /**
-     * Carrega dados da base de dados.
+     * Gets data from database.
      */
     private void updateData() {
-        //passa os dados para a ObservableList
         try {
             accountsObservableList.clear();
             accountsObservableList.addAll(mainController.getAccounts());
@@ -316,12 +306,12 @@ public class DesktopApp extends Application {
         updateData();
     }
 
-    //********** Gestão de dados **********//
+    //********** Manage data **********//
 
     /**
-     * Retorna os dados como uma observable list de Transaction.
+     * Returns data as Transaction observable list.
      *
-     * @return Devolve ObservableList do dados de movimentos.
+     * @return ObservableList.
      */
     public ObservableList<Transaction> getTransactions(int accountIdSelected) {
         Account account = mainController.getAccountById(accountIdSelected);
@@ -334,16 +324,16 @@ public class DesktopApp extends Application {
     }
 
     /**
-     * Retorna os dados como uma observable list de Transaction.
+     * Returns Accounts as observable list.
      *
-     * @return Devolve ObservableList do dados de movimentos.
+     * @return ObservableList.
      */
     public ObservableList<Account> getAccounts() {
         return accountsObservableList;
     }
 
 
-    //************* Outros ****************//
+    //************* Others ****************//
 
     /**
      * Get the preferred account id.
@@ -361,7 +351,7 @@ public class DesktopApp extends Application {
      *
      * @param accountId AccountID
      */
-    private void setPreferedAccountId(int accountId) {
+    private void setPreferredAccountId(int accountId) {
         Preferences prefs = Preferences.userNodeForPackage(this.getClass());
         if (preferredAccount != null & accountId >= 0) {
             prefs.putInt(preferredAccount, accountId);
@@ -369,68 +359,4 @@ public class DesktopApp extends Application {
             prefs.remove(preferredAccount);
         }
     }
-//
-//    /**
-//     * Carrega os dados da pessoa do arquivo especificado. A pessoa atual
-//     * será substituída.
-//     *
-//     * @param file
-//     */
-//    public void loadTransactionDataFromFile(File file) {
-//        try {
-//            JAXBContext context = JAXBContext
-//                    .newInstance(Transactions.class);
-//            Unmarshaller um = context.createUnmarshaller();
-//
-//            // Reading XML from the file and unmarshalling.
-//            Transactions wrapper = (Transactions) um.unmarshal(file);
-//
-//            transactionsObservableList.clear();
-//            transactionsObservableList.addAll(Transactions.get());
-//
-//            // Save the file path to the registry.
-//            setTransactionFilePath(file);
-//
-//        } catch (Exception e) { // catches ANY exception
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Ficheiro não encontrado");
-//            alert.setHeaderText("Erro");
-//            alert.setContentText("Não foi possível carregar dados do arquivo:\n"
-//                    + file.getPath());
-//            alert.showAndWait();
-//        }
-//    }
-//
-//    /**
-//     * Salva os dados da pessoa atual no arquivo especificado.
-//     *
-//     * @param file
-//     */
-//    public void saveTransactionDataToFile(File file) {
-//        try {
-//            JAXBContext context = JAXBContext
-//                    .newInstance(Transactions.class);
-//            Marshaller m = context.createMarshaller();
-//            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//
-//            // Envolvendo nossos dados de um movimento.
-//            Transactions wrapper = new Transactions();
-//            Transactions.set(transactionsObservableList);
-//
-//            // Enpacotando e salvando XML  no arquivo.
-//            m.marshal(wrapper, file);
-//
-//            // Saalva o caminho do arquivo no registro.
-//            setTransactionFilePath(file);
-//        } catch (Exception e) { // catches ANY exception
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Não é possível salvar");
-//            alert.setHeaderText("Erro");
-//            alert.setContentText("Não foi possível salvar os dados do arquivo:\n"
-//                    + file.getPath());
-//            alert.showAndWait();
-//        }
-//    }
-//
-//
 }

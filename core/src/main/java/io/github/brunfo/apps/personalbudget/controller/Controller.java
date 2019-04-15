@@ -141,7 +141,7 @@ public class Controller {
      * @return true if success.
      */
     public boolean removeTransaction(Transaction transaction) {
-        if (dbHandler.removeTrasaction(transaction.getId()))
+        if (dbHandler.removeTransaction(transaction.getId()))
             return accounts.removeTransaction(transaction);
         return false;
     }
@@ -156,8 +156,8 @@ public class Controller {
             //Sets the amount to negative in the origin account
             originTransaction.setAmount(tempTransaction.getAmount() * -1);
             //adds description referring that is a transfer
-            originTransaction.setDescription("trfd from: " + tempTransaction.getDescription());
-            destinyTransaction.setDescription("trfd to: " + tempTransaction.getDescription());
+            originTransaction.setDescription("trf from: " + tempTransaction.getDescription());
+            destinyTransaction.setDescription("trf to: " + tempTransaction.getDescription());
 
             //sets destiny account
             destinyTransaction.setAccountId(destinyAccount.getId());
@@ -170,8 +170,8 @@ public class Controller {
             //TODO change this method to a rollback
             //the transfer had failed if has reached this point,
             // it reverts  any entry in the database
-            dbHandler.removeTrasaction(originTransaction.getId());
-            dbHandler.removeTrasaction(destinyTransaction.getId());
+            dbHandler.removeTransaction(originTransaction.getId());
+            dbHandler.removeTransaction(destinyTransaction.getId());
         }
         return false;
     }
@@ -197,7 +197,7 @@ public class Controller {
      * @param transaction transaction to be copied.
      * @return copy of transaction.
      */
-    Transaction copyTransaction(Transaction transaction) {
+    private Transaction copyTransaction(Transaction transaction) {
         return accounts.copyTransaction(transaction);
     }
 

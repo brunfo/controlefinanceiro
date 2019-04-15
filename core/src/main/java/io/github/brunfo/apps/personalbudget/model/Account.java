@@ -6,10 +6,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Classe Model para uma Account.
+ * Class Model for a Account.
  *
  * @author Bruno Rego
  */
@@ -24,17 +25,17 @@ public class Account {
 
 
     /**
-     * Construtor padrão
+     * Constructor
      */
     public Account() {
         this(0, null);
     }
 
     /**
-     * Construtor com dados iniciais.
+     * Constructor width initial data.
      *
-     * @param id   ID da Account.
-     * @param name Nome da conta
+     * @param id   ID.
+     * @param name name
      */
     public Account(int id, String name) {
         this.id = new SimpleObjectProperty<>(id);
@@ -66,6 +67,7 @@ public class Account {
     }
 
     public List<Transaction> getTransactions() {
+        Collections.sort(transactions);
         return transactions;
     }
 

@@ -6,7 +6,7 @@ import io.github.brunfo.apps.personalbudget.desktop.DesktopApp;
 public interface OverviewController {
 
     /**
-     * É chamado pela aplicação principal para referenciar a si mesma.
+     * Called by desktop to references it self.
      *
      * @param controller
      */

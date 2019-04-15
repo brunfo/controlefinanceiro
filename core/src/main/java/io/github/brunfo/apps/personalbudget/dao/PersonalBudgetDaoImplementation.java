@@ -181,7 +181,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
     }
 
     @Override
-    public boolean removeTrasaction(int id) {
+    public boolean removeTransaction(int id) {
         PreparedStatement stmtDeleteTransaction;
         boolean bDeleted = false;
 

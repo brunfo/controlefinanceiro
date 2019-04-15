@@ -20,13 +20,13 @@ public class AccountsOverviewController implements OverviewController {
 
     @FXML
     void initialize() {
-        //Inicializa a tabela de contas
+        //Initialize table view
         idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
     }
 
     /**
-     * É chamado pela aplicação principal para referenciar a si mesma.
+     * Called be desktop app to reference it self.
      *
      * @param controller
      */
@@ -69,13 +69,13 @@ public class AccountsOverviewController implements OverviewController {
     }
 
     /**
-     * Mensagem de erro quando nada está selecionado.
+     * Error message when nothing is selected..
      */
     private void noSelection() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Nenhuma seleção");
-        alert.setHeaderText("Nenhuma conta selecionada");
-        alert.setContentText("Por favor, selecione uma conta na tabela.");
+        alert.setTitle("No selection");
+        alert.setHeaderText("No account selected");
+        alert.setContentText("Please, select a account.");
         alert.showAndWait();
     }
 }

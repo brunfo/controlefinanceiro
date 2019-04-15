@@ -31,10 +31,7 @@ public class TransactionEditDialogController implements EditDialogController {
     private DesktopApp desktopApp;
 
 
-    /**
-     * Inicializa a classe controlle. Este método é chamado automaticamente
-     * após o arquivo fxml ter sido carregado.
-     */
+
     @SuppressWarnings("EmptyMethod")
     @FXML
     private void initialize() {
@@ -43,7 +40,7 @@ public class TransactionEditDialogController implements EditDialogController {
 
 
     /**
-     * Define o palco deste dialog.
+     * Defines the stage to this dialog.
      *
      * @param dialogStage
      */
@@ -60,7 +57,7 @@ public class TransactionEditDialogController implements EditDialogController {
 
 
     /**
-     * Define a pessoa a ser editada no dialog.
+     * Defines the transaction
      *
      * @param transaction
      */
@@ -73,18 +70,11 @@ public class TransactionEditDialogController implements EditDialogController {
         amountTextField.setText(String.valueOf(transaction.getAmount()));
     }
 
-    /**
-     * Retorna true se o usuário clicar OK,caso contrário false.
-     *
-     * @return
-     */
     public boolean isOkClicked() {
         return okClicked;
     }
 
-    /**
-     * Chamado quando o usuário clica OK.
-     */
+
     @FXML
     private void handleOk() {
         if (isInputValid()) {
@@ -99,57 +89,48 @@ public class TransactionEditDialogController implements EditDialogController {
         }
     }
 
-    /**
-     * Chamado quando o usuário clica Cancel.
-     */
     @FXML
     private void handleCancel() {
         dialogStage.close();
     }
 
-    /**
-     * Valida a entrada do usuário nos campos de texto.
-     *
-     * @return true se a entrada é válida
-     */
     private boolean isInputValid() {
         String errorMessage = "";
 
         if (accountComboBox.getValue() == null) {
-            errorMessage += "Account inválida!\n";
+            errorMessage += "Invalid account!\n";
         }
         if (operationDatePicker.getValue() == null) {
-            errorMessage += "Data inválida!\n";
+            errorMessage += "Invalid date!\n";
         } else {
             if (DateUtil.isValidDate(operationDatePicker.getValue().toString())) {
-                errorMessage += "Data transaction inválida. Use o formato " + DateUtil.getDateFormat() + "!\n";
+                errorMessage += "Invalid date format. Use the format " + DateUtil.getDateFormat() + "!\n";
             }
         }
         if (transactionDatePicker.getValue() == null) {
-            errorMessage += "Data inválida!\n";
+            errorMessage += "Invalid date!\n";
         } else {
             if (DateUtil.isValidDate(transactionDatePicker.getValue().toString())) {
-                errorMessage += "Data transaction inválida. Use o formato " + DateUtil.getDateFormat() + "!\n valor: " + transactionDatePicker.getPromptText();
+                errorMessage += "Invalid date format. Use the format " + DateUtil.getDateFormat() + "!\n value: " + transactionDatePicker.getPromptText();
             }
         }
         if (amountTextField.getText() == null || amountTextField.getText().length() == 0) {
-            errorMessage += "Montante inválido!\n";
+            errorMessage += "Invalid amount!\n";
         } else {
-            // tenta converter o amountTextField em um double.
+            // tries to convert amountTextField in a double.
             try {
                 Double.parseDouble(amountTextField.getText());
             } catch (NumberFormatException e) {
-                errorMessage += "Montante inválido (deve ser um numero)!\n";
+                errorMessage += "Invalid amount (must be a number)!\n";
             }
         }
 
         if (errorMessage.length() == 0) {
             return true;
         } else {
-            // Mostra a mensagem de erro.
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Campos Inválidos");
-            alert.setHeaderText("Por favor, corrija os campos inválidos");
+            alert.setTitle("Invalid fields");
+            alert.setHeaderText("Please, correct invalid fields");
             alert.setContentText(errorMessage);
             alert.showAndWait();
 

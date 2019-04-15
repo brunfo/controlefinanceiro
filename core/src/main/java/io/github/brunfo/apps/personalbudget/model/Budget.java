@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Budget {
 
-    List<Item> items;
+    private List<Item> items;
     private int id;
     private String name;
 

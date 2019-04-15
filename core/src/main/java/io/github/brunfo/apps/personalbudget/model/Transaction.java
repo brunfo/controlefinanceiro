@@ -12,7 +12,7 @@ import java.util.Map;
  * @author Bruno Rego
  */
 
-public class Transaction {
+public class Transaction implements Comparable<Transaction> {
 
     private final IntegerProperty id;
     private final IntegerProperty accountId;
@@ -186,5 +186,10 @@ public class Transaction {
                 ", " + amount.get() +
                 ", " + balance.get() +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Transaction transaction) {
+        return this.getTransactionDate().compareTo(transaction.getTransactionDate());
     }
 }

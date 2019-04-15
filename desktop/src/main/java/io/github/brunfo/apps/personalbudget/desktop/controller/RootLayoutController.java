@@ -5,19 +5,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 
 
-/**
- * O controlador para o root layout. O root layout provê um layout básico
- * para a aplicação contendo uma barra de menu e um espaço onde outros elementos
- * JavaFX podem ser colocados.
- *
- * @author Bruno Rego
- */
 public class RootLayoutController implements OverviewController {
 
     private DesktopApp desktopApp;
 
     /**
-     * Abre o DashBoard
+     * Open DashBoard overview
      */
     @FXML
     private void handleDashBoard() {
@@ -25,7 +18,7 @@ public class RootLayoutController implements OverviewController {
     }
 
     /**
-     * Abre o Accounts
+     * Opens Accounts overview
      */
     @FXML
     private void handleAccounts() {
@@ -33,7 +26,7 @@ public class RootLayoutController implements OverviewController {
     }
 
     /**
-     * Abre o Transactions
+     * Opens Transactions overview
      */
     @FXML
     private void handleTransactions() {
@@ -52,9 +45,9 @@ public class RootLayoutController implements OverviewController {
 
 
     /**
-     * Abre o FileChooser para permitir o usuário selecionar uma agenda
-     * para carregar.
+     * Opens file chooser.
      */
+    @SuppressWarnings("SpellCheckingInspection")
     @FXML
     private void handleOpen() {
 //        FileChooser fileChooser = new FileChooser();
@@ -72,8 +65,7 @@ public class RootLayoutController implements OverviewController {
     }
 
     /**
-     * Salva o arquivo para o arquivo de pessoa aberto atualmente. Se não houver
-     * arquivo aberto, a janela "salvar como" é mostrada.
+     * Saves a file.
      */
     @FXML
     private void handleSave() {
@@ -86,8 +78,7 @@ public class RootLayoutController implements OverviewController {
     }
 
     /**
-     * Abre um FileChooser para permitir o usuário selecionar um arquivo
-     * para salvar.
+     * opens file chooser to select a file to save.
      */
     @FXML
     private void handleSaveAs() {
@@ -110,31 +101,29 @@ public class RootLayoutController implements OverviewController {
     }
 
     /**
-     * Abre uma janela Sobre.
+     * Opens about window.
      */
     @FXML
     private void handleAbout() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(desktopApp.TITLE);
-        alert.setHeaderText("Sobre");
+        alert.setHeaderText("About");
         alert.setContentText("Version : " + desktopApp.VERSION +
-                " \nAutor: Bruno Rego\nWebsite: http://brunfo.github.io\n");
+                " \nAuthor: Bruno Rego\nWebsite: http://brunfo.github.io\n");
         alert.showAndWait();
     }
 
     /**
-     * Fecha a aplicação.
+     * Closes the app.
      */
     @FXML
     private void handleExit() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(desktopApp.TITLE);
-        alert.setHeaderText("Sair");
-        alert.setContentText("Tem a certeza que quer sair?");
+        alert.setHeaderText("Exit");
+        alert.setContentText("Are you sure that you want to exit?");
         if (alert.showAndWait().get().getButtonData().isDefaultButton()) {
             System.exit(0);
-        } else {
-            return;
         }
     }
 

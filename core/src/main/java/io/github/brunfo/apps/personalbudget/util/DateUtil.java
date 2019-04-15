@@ -5,27 +5,21 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Funções auxiliares para lidar com datas.
+ * Auxiliary methods class.
  */
 public class DateUtil {
 
-    /**
-     * O padrão usado para conversão. Mude como quiser.
-     */
+
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 
-    /**
-     * O formatador de data.
-     */
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern(DATE_PATTERN);
 
     /**
-     * Retorna os dados como String formatado. O
-     * {@link DateUtil#DATE_PATTERN}  (padrão de data) que é utilizado.
+     * Formats a date to string
      *
-     * @param date A data a ser retornada como String
-     * @return String formadado
+     * @param date The date to be returned as String
+     * @return String formatted
      */
     public static String format(LocalDate date) {
         if (date == null) {
@@ -35,13 +29,10 @@ public class DateUtil {
     }
 
     /**
-     * Converte um String no formato definido {@link DateUtil#DATE_PATTERN}
-     * para um objeto {@link LocalDate}.
-     * <p>
-     * Retorna null se o String não puder se convertido.
+     * Converts a string into date
      *
-     * @param dateString a data como String
-     * @return o objeto data ou null se não puder ser convertido
+     * @param dateString date as string.
+     * @return .date object
      */
     public static LocalDate parse(String dateString) {
         try {
@@ -52,13 +43,12 @@ public class DateUtil {
     }
 
     /**
-     * Checa se o String é uma data válida.
+     * Checks if string is valid as a date.
      *
-     * @param dateString A data como String
-     * @return true se o String é uma data válida
+     * @param dateString date as string
+     * @return true if valid.
      */
     public static boolean isValidDate(String dateString) {
-        // Tenta converter o String.
         return DateUtil.parse(dateString) == null;
     }
 

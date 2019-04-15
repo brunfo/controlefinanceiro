@@ -9,7 +9,7 @@ public interface PersonalBudgetDao {
 
     List<Transaction> getTransactions();
 
-    boolean removeTrasaction(int id);
+    boolean removeTransaction(int id);
 
     boolean editTransaction(Transaction transaction);
 
