@@ -150,6 +150,8 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
                 " name     VARCHAR(50))";
     }
 
+    ///////// TRANSACTIONS /////////
+
     @Override
     public List<Transaction> getTransactions() {
         List<Transaction> transactionArrayList = new ArrayList<>();
@@ -158,8 +160,8 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
         try {
             statement = dbConnection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM APP.TRANSACTIONS");
-            while (resultSet.next()){
-                Transaction transaction =new Transaction(
+            while (resultSet.next()) {
+                Transaction transaction = new Transaction(
                         resultSet.getInt("id"),
                         resultSet.getInt("idAccount"),
                         DateUtil.parse(resultSet.getString("dateOperation")),
@@ -172,8 +174,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
             if (sqlError.getErrorCode() == 30000 &&
                     sqlError.getSQLState().equalsIgnoreCase("42X05")) {
                 createTable("APP.TRANSACTIONS", getTableTransactionsStr());
-            }
-            else
+            } else
                 printSQLException(sqlError);
         }
 
@@ -210,6 +211,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
         }
         return id;
     }
+
     @Override
     public boolean removeTransaction(int id) {
         PreparedStatement stmtDeleteTransaction;
@@ -251,9 +253,9 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
             stmtUpdateExistingRecord.setDouble(5, transaction.getAmount());
             stmtUpdateExistingRecord.setInt(6, transaction.getId());
 
-            int a= stmtUpdateExistingRecord.executeUpdate();
+            int a = stmtUpdateExistingRecord.executeUpdate();
             bEdited = true;
-            System.out.println("Record edited successfully, return " + transaction.getId() +" "+ a);
+            System.out.println("Record edited successfully, return " + transaction.getId() + " " + a);
         } catch (SQLException sqlError) {
             printSQLException(sqlError);
         }
@@ -289,12 +291,13 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
                     sqlError.getSQLState().equalsIgnoreCase("42X05")) {
                 createTable("APP.TRANSACTIONS", getTableTransactionsStr());
                 id = addTransaction(transaction);
-            }
-            else
+            } else
                 printSQLException(sqlError);
         }
         return id;
     }
+
+    //////// ACCOUNTS ////////////
 
     @Override
     public List<Account> getAccounts() {
@@ -304,7 +307,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
         try {
             statement = dbConnection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM APP.ACCOUNTS");
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 accountArrayList.add(new Account(
                         resultSet.getInt("id"),
                         resultSet.getString("name")));
@@ -313,27 +316,11 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
             if (sqlError.getErrorCode() == 30000 &&
                     sqlError.getSQLState().equalsIgnoreCase("42X05")) {
                 createTable("APP.ACCOUNTS", getTableAccountsStr());
-            }
-            else
+            } else
                 printSQLException(sqlError);
         }
 
         return accountArrayList;
-    }
-
-    @Override
-    public boolean clearAllData() {
-        Statement stmtClearAll;
-        try {
-            stmtClearAll = dbConnection.createStatement();
-            stmtClearAll.executeUpdate("DELETE FROM APP.TRANSACTIONS");
-            stmtClearAll.clearBatch();
-            stmtClearAll.executeUpdate("DELETE FROM APP.ACCOUNTS");
-            return true;
-        } catch (SQLException sqlError) {
-            printSQLException(sqlError);
-        }
-        return false;
     }
 
     @Override
@@ -347,8 +334,8 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
                             "WHERE id = ?");
             stmtDeleteAccount.clearParameters();
             stmtDeleteAccount.setInt(1, id);
-            stmtDeleteAccount.executeUpdate();
-            bDeleted = true;
+            if (stmtDeleteAccount.executeUpdate() == 1)
+                bDeleted = true;
         } catch (SQLException sqlError) {
             printSQLException(sqlError);
         }
@@ -362,14 +349,13 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
         try {
             stmtUpdateExistingRecord = dbConnection.prepareStatement(
                     "UPDATE APP.ACCOUNTS " +
-                            "SET name = ? " +
-                            "WHERE id = ?");
-
+                            "SET name =  ? " +
+                            "WHERE id =  ? ");
             stmtUpdateExistingRecord.clearParameters();
             stmtUpdateExistingRecord.setString(1, account.getName());
             stmtUpdateExistingRecord.setInt(2, account.getId());
-            stmtUpdateExistingRecord.executeUpdate();
-            bEdited = true;
+            if (stmtUpdateExistingRecord.executeUpdate() == 1)
+                bEdited = true;
         } catch (SQLException sqlError) {
             printSQLException(sqlError);
         }
@@ -401,10 +387,24 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
                     sqlError.getSQLState().equalsIgnoreCase("42X05")) {
                 createTable("APP.ACCOUNTS", getTableAccountsStr());
                 id = addAccount(account);
-            }
-            else
+            } else
                 printSQLException(sqlError);
         }
         return id;
+    }
+
+    @Override
+    public boolean clearAllData() {
+        Statement stmtClearAll;
+        try {
+            stmtClearAll = dbConnection.createStatement();
+            stmtClearAll.executeUpdate("DELETE FROM APP.TRANSACTIONS");
+            stmtClearAll.clearBatch();
+            stmtClearAll.executeUpdate("DELETE FROM APP.ACCOUNTS");
+            return true;
+        } catch (SQLException sqlError) {
+            printSQLException(sqlError);
+        }
+        return false;
     }
 }

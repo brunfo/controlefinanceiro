@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class PersonalBudgetDaoImplementationTest {
@@ -16,7 +17,7 @@ public class PersonalBudgetDaoImplementationTest {
     @Before
     public void setUp() throws Exception {
         //clear data
-        dbHandler.clearAllData();
+        // dbHandler.clearAllData();
     }
 
     @After
@@ -25,11 +26,10 @@ public class PersonalBudgetDaoImplementationTest {
         dbHandler.clearAllData();
     }
 
-
     @Test
     public void transactionsTests() {
         //prints all transactions in database
-        dbHandler.getTransactions().forEach(System.out::println);
+        printTransactions();
 
         //creates new transaction
         Account account1 = new Account(1, "Account 1");
@@ -43,7 +43,7 @@ public class PersonalBudgetDaoImplementationTest {
         assert (transaction.getId() >= 0);
 
         //prints all transactions in database
-        dbHandler.getTransactions().forEach(System.out::println);
+        printTransactions();
 
         //changes the amount
         transaction.setAmount(10.0);
@@ -52,7 +52,7 @@ public class PersonalBudgetDaoImplementationTest {
         assertTrue(dbHandler.editTransaction(transaction));
 
         //prints all transactions in database
-        dbHandler.getTransactions().forEach(System.out::println);
+        printTransactions();
 
         //gets the account id
         assert (dbHandler.getAccountIdFromTransaction(transaction.getId()) == account1.getId());
@@ -65,34 +65,53 @@ public class PersonalBudgetDaoImplementationTest {
         assert (dbHandler.getAccountIdFromTransaction(transaction.getId()) == account2.getId());
 
         //prints all transactions in database
-        dbHandler.getTransactions().forEach(System.out::println);
+        printTransactions();
 
         //removes the transaction from database
         System.out.println("\n***** remove *****");
         assertTrue(dbHandler.removeTransaction(transaction.getId()));
+        printTransactions();
 
-        //prints all transactions in database
-        dbHandler.getTransactions().forEach(System.out::println);
         System.out.println("*** end remove ***");
     }
 
     @Test
-    public void getAccounts() {
+    public void accountTests() {
+        printAccounts();
+        //add account
+        Account account = new Account(0, "account 1");
+        account.setId(dbHandler.addAccount(account));
+        assert (account.getId() >= 0);
+        printAccounts();
+
+        //changes name
+        account.setName("account 2");
+        assertTrue(dbHandler.editAccount(account));
+        printAccounts();
+
+        //changes id of object but not in database
+        int savedId = account.getId();
+        account.setId(2);
+        assertFalse(dbHandler.editAccount(account));
+        printAccounts();
+
+        //removes nonexistent account
+        assertFalse(dbHandler.removeAccount(account.getId()));
+        printAccounts();
+
+        //removes existent account
+        assertTrue(dbHandler.removeAccount(savedId));
+        printAccounts();
+
     }
 
-    @Test
-    public void clearAllData() {
+    private void printTransactions() {
+        //prints all transactions in database
+        dbHandler.getTransactions().forEach(System.out::println);
     }
 
-    @Test
-    public void removeAccount() {
-    }
-
-    @Test
-    public void editAccount() {
-    }
-
-    @Test
-    public void addAccount() {
+    private void printAccounts() {
+        //prints all transactions in database
+        dbHandler.getAccounts().forEach(System.out::println);
     }
 }
