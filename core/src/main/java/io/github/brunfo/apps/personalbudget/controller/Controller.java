@@ -96,13 +96,16 @@ public class Controller {
     }
 
     /**
-     * Removes a account from the list.
+     * Removes a account from the list after removes it successfully
+     * from database.
      *
      * @param account account to be removed.
      * @return true if success.
      */
     public boolean removeAccount(Account account) {
-        return accounts.removeAccount(account);
+        if (account != null && dbHandler.removeAccount(account.getId()))
+            return accounts.removeAccount(account);
+        return false;
     }
 
     //********************* Transactions ***********************//
@@ -146,13 +149,21 @@ public class Controller {
         return false;
     }
 
+    public boolean clearAllData() {
+        if (dbHandler.clearAllData()) {
+            loadDataFromDatabase();
+            return true;
+        }
+        return false;
+    }
+
 
     public boolean transferToAccount(Transaction tempTransaction, Account destinyAccount) {
         Account originAccount = accounts.getAccountById(tempTransaction.getAccountId());
         if (originAccount != null && destinyAccount != null) {
             //Creates two new transactions
-            Transaction originTransaction = copyTransaction(tempTransaction);
-            Transaction destinyTransaction = copyTransaction(tempTransaction);
+            Transaction originTransaction = tempTransaction.clone();
+            Transaction destinyTransaction = tempTransaction.clone();
             //Sets the amount to negative in the origin account
             originTransaction.setAmount(tempTransaction.getAmount() * -1);
             //adds description referring that is a transfer
@@ -160,7 +171,7 @@ public class Controller {
             destinyTransaction.setDescription("trf to: " + tempTransaction.getDescription());
 
             //sets destiny account
-            destinyTransaction.setAccountId(destinyAccount.getId());
+            destinyTransaction.setAccount(destinyAccount);
 
             //adds to the list of respective accounts
             if (addTransaction(originTransaction) &&
@@ -184,21 +195,11 @@ public class Controller {
      * @return true if success.
      */
     public boolean changeTransactionAccount(Transaction transaction, Account account) {
-        Transaction tempTransaction = copyTransaction(transaction);
+        Transaction tempTransaction = transaction.clone();
         if (accounts.editTransactionAccount(transaction, account)) {
             return dbHandler.editTransaction(transaction);
         }
         return false;
-    }
-
-    /**
-     * Return a duplicate copy of a transaction.
-     *
-     * @param transaction transaction to be copied.
-     * @return copy of transaction.
-     */
-    private Transaction copyTransaction(Transaction transaction) {
-        return accounts.copyTransaction(transaction);
     }
 
 

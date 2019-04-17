@@ -46,7 +46,13 @@ public class Transaction implements Comparable<Transaction> {
                        LocalDate transactionDate,
                        String description,
                        double amount) {
-        this(id, accountId, operationDate, transactionDate, description, amount, new HashMap<>());
+        this(id,
+                accountId,
+                operationDate,
+                transactionDate,
+                description,
+                amount,
+                new HashMap<>());
     }
 
     /**
@@ -66,13 +72,42 @@ public class Transaction implements Comparable<Transaction> {
                        LocalDate transactionDate,
                        String description,
                        double amount, Map budgetItems) {
+        this(id,
+                accountId,
+                operationDate,
+                transactionDate,
+                description,
+                amount,
+                budgetItems,
+                0.0);
+    }
+
+    /**
+     * Constructor width initial data.
+     *
+     * @param id              ID of transaction.
+     * @param operationDate   Date of register transaction.
+     * @param transactionDate Date of transaction.
+     * @param description     Description.
+     * @param amount          Amount.
+     * @param budgetItems     HashMap of budget items.
+     */
+    @SuppressWarnings("unchecked")
+    public Transaction(Integer id,
+                       Integer accountId,
+                       LocalDate operationDate,
+                       LocalDate transactionDate,
+                       String description,
+                       double amount,
+                       Map budgetItems,
+                       double balance) {
         this.id = new SimpleIntegerProperty(id);
         this.accountId = new SimpleIntegerProperty(accountId);
         this.operationDate = new SimpleObjectProperty<>(operationDate);
         this.transactionDate = new SimpleObjectProperty<>(transactionDate);
         this.description = new SimpleStringProperty(description);
         this.amount = new SimpleObjectProperty<>(amount);
-        this.balance = new SimpleObjectProperty<>(0.0);
+        this.balance = new SimpleObjectProperty<>(balance);
         this.budgetItems = budgetItems;
     }
 
@@ -89,6 +124,8 @@ public class Transaction implements Comparable<Transaction> {
     }
 
     public Integer getAccountId() {
+        if (account != null)
+            return account.getId();
         return accountId.get();
     }
 
@@ -97,11 +134,10 @@ public class Transaction implements Comparable<Transaction> {
     }
 
     public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public void setAccountId(Integer accountId) {
-        this.accountId.set(accountId);
+        if (account != null) {
+            this.account = account;
+            accountId.set(account.getId());
+        }
     }
 
     public IntegerProperty accountIdProperty() {
@@ -191,5 +227,23 @@ public class Transaction implements Comparable<Transaction> {
     @Override
     public int compareTo(Transaction transaction) {
         return this.getTransactionDate().compareTo(transaction.getTransactionDate());
+    }
+
+    /**
+     * Return a duplicate copy of a transaction.
+     *
+     * @return copy of transaction.
+     */
+    @Override
+    public Transaction clone() {
+        return new Transaction(
+                this.getId(),
+                this.getAccountId(),
+                this.getOperationDate(),
+                this.getTransactionDate(),
+                this.getDescription(),
+                this.getAmount(),
+                this.getBudgetItems(),
+                this.getBalance());
     }
 }

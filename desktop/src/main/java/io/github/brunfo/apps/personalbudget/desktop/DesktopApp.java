@@ -296,9 +296,10 @@ public class DesktopApp extends Application {
         updateData();
     }
 
-    public void editTransaction(Transaction selectedTransaction) {
-        mainController.editTransaction(selectedTransaction);
+    public boolean editTransaction(Transaction selectedTransaction) {
+        boolean editTransaction = mainController.editTransaction(selectedTransaction);
         updateData();
+        return editTransaction;
     }
 
     public void removeTransaction(Transaction selectedTransaction) {

@@ -8,10 +8,10 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 public class TransactionsTest {
-    static Controller controller = Controller.getInstance();
+    private static Controller controller = Controller.getInstance();
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUp() {
         controller.loadDataFromDatabase();
         //printAccounts();
     }
@@ -32,7 +32,7 @@ public class TransactionsTest {
     public void addTransaction() {
 
         Transaction transaction = new Transaction();
-        transaction.setAccountId(1);
+        //transaction.setAccountId(1);
         transaction.setDescription("Teste description");
         transaction.setAmount(200.);
         assertTrue(controller.addTransaction(transaction));

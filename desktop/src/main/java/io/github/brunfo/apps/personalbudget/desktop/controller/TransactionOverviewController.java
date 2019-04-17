@@ -145,8 +145,8 @@ public class TransactionOverviewController implements OverviewController {
         //creates new transaction
         Transaction tempTransaction = new Transaction();
         //sets the account id of the active value of the combo box
-        tempTransaction.setAccountId(
-                accountComboBox.getSelectionModel().getSelectedItem().getId());
+        tempTransaction.setAccount(
+                accountComboBox.getSelectionModel().getSelectedItem());
         boolean okClicked = desktopApp.showTransactionEditDialog(tempTransaction);
         if (okClicked) {
             //adds transaction to the storage
@@ -169,10 +169,10 @@ public class TransactionOverviewController implements OverviewController {
         if (selectedTransaction != null) {
             //saves the old account
             Account oldAccount = selectedTransaction.getAccount();
+            Transaction oldTransaction = selectedTransaction.clone();
             boolean okClicked = desktopApp.showTransactionEditDialog(selectedTransaction);
-            if (okClicked) {
-                //edits the transaction
-                desktopApp.editTransaction(selectedTransaction);
+            //if click ok && valid transaction
+            if (okClicked && desktopApp.editTransaction(selectedTransaction)) {
                 //removes the transaction on the old account if is different
                 if (!oldAccount.equals(selectedTransaction.getAccount()))
                     oldAccount.getTransactions().remove(selectedTransaction);
@@ -181,6 +181,11 @@ public class TransactionOverviewController implements OverviewController {
                 //refresh the table view
                 refreshTableView(
                         accountObservableList.indexOf(selectedTransaction.getAccount()));
+            }
+            //the edit have fail and restore details
+            else {
+                selectedTransaction = oldTransaction;
+                selectedTransaction.setAccount(oldAccount);
             }
         } else {
             noSelection();

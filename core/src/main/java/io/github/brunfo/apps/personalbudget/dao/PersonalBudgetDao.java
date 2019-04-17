@@ -17,6 +17,8 @@ public interface PersonalBudgetDao {
 
     List<Account> getAccounts();
 
+    boolean clearAllData();
+
     boolean removeAccount(int id);
 
     boolean editAccount(Account account);

@@ -80,7 +80,7 @@ class Accounts {
         if (isAccountValid(account)) {
             Account oldAccount = getAccountById(transaction.getAccountId());
             removeTransaction(transaction);
-            transaction.setAccountId(account.getId());
+            transaction.setAccount(account);
             addTransaction(transaction);
             updateTransactionsBalance(oldAccount);
             updateTransactionsBalance(account);

@@ -78,7 +78,7 @@ public class TransactionEditDialogController implements EditDialogController {
     @FXML
     private void handleOk() {
         if (isInputValid()) {
-            transaction.setAccountId(accountComboBox.getValue().getId());
+            transaction.setAccount(accountComboBox.getValue());
             transaction.setAccount(accountComboBox.getValue());
             transaction.setOperationDate(operationDatePicker.getValue());
             transaction.setTransactionDate(transactionDatePicker.getValue());

@@ -292,6 +292,21 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
     }
 
     @Override
+    public boolean clearAllData() {
+        Statement stmtClearAll;
+        try {
+            stmtClearAll = dbConnection.createStatement();
+            stmtClearAll.executeUpdate("DELETE FROM APP.TRANSACTIONS");
+            stmtClearAll.clearBatch();
+            stmtClearAll.executeUpdate("DELETE FROM APP.ACCOUNTS");
+            return true;
+        } catch (SQLException sqlError) {
+            printSQLException(sqlError);
+        }
+        return false;
+    }
+
+    @Override
     public boolean removeAccount(int id) {
         PreparedStatement stmtDeleteAccount;
         boolean bDeleted = false;

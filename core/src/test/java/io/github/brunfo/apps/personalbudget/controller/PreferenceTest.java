@@ -2,7 +2,7 @@ package io.github.brunfo.apps.personalbudget.controller;
 
 import java.util.prefs.Preferences;
 
-public class PreferenceTest {
+class PreferenceTest {
     private Preferences prefs;
 
     public static void main(String[] args) {
@@ -10,7 +10,7 @@ public class PreferenceTest {
         test.setPreference();
     }
 
-    public void setPreference() {
+    private void setPreference() {
         // This will define a node in which the preferences can be stored
         prefs = Preferences.userRoot().node(this.getClass().getName());
         String ID1 = "Test1";

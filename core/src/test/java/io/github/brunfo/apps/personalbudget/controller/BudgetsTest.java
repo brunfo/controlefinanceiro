@@ -7,13 +7,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class BudgetsTest {
 
-    static Controller controller;
-    static Budget personalBudget;
+    private static Controller controller;
+    private static Budget personalBudget;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         controller = Controller.getInstance();
         personalBudget = new Budget(1, "pessoal");
     }

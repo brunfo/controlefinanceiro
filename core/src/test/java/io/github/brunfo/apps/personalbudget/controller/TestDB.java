@@ -4,7 +4,7 @@ import io.github.brunfo.apps.personalbudget.model.Account;
 import io.github.brunfo.apps.personalbudget.model.Transaction;
 
 
-public class TestDB {
+class TestDB {
     private static Controller controller = Controller.getInstance();
 
     public static void main(String[] args) {
@@ -18,7 +18,7 @@ public class TestDB {
         Transaction transaction = new Transaction();
         transaction.setDescription("transferencia");
         transaction.setAmount(200.);
-        transaction.setAccountId(1);
+        // transaction.setAccountId(1);
         controller.addTransaction(transaction);
 
         printAccounts();
@@ -32,14 +32,14 @@ public class TestDB {
     }
 
 
-    static void printAccounts() {
+    private static void printAccounts() {
         if (controller.getAccounts() != null)
             for (Account account : controller.getAccounts()) {
                 printAccountTransactions(account);
             }
     }
 
-    static void printAccountTransactions(Account account) {
+    private static void printAccountTransactions(Account account) {
         System.out.println("\n*************************************************************");
         System.out.println("Account : " + account.getName());
         System.out.println("-------------------------------------------------------------");
