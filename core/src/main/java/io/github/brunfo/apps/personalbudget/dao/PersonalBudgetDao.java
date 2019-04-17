@@ -9,6 +9,8 @@ public interface PersonalBudgetDao {
 
     List<Transaction> getTransactions();
 
+    int getAccountIdFromTransaction(int transactionId);
+
     boolean removeTransaction(int id);
 
     boolean editTransaction(Transaction transaction);

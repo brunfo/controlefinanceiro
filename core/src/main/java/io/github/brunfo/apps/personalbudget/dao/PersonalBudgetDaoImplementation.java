@@ -181,6 +181,36 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
     }
 
     @Override
+    public int getAccountIdFromTransaction(int transactionId) {
+        Statement statement;
+        ResultSet resultSet;
+        int id = -1;
+        try {
+            statement = dbConnection.createStatement();
+            resultSet = statement.executeQuery(
+                    "SELECT idAccount FROM APP.TRANSACTIONS WHERE ID=" +
+                            transactionId);
+
+            int count = 0;
+            while (resultSet.next()) {
+                id = resultSet.getInt("idAccount");
+                count++;
+            }
+            if (count == 1)
+                return id;
+            else
+                id = -1;
+
+        } catch (SQLException sqlError) {
+            if (sqlError.getErrorCode() == 30000 &&
+                    sqlError.getSQLState().equalsIgnoreCase("42X05")) {
+                createTable("APP.TRANSACTIONS", getTableTransactionsStr());
+            } else
+                printSQLException(sqlError);
+        }
+        return id;
+    }
+    @Override
     public boolean removeTransaction(int id) {
         PreparedStatement stmtDeleteTransaction;
         boolean bDeleted = false;

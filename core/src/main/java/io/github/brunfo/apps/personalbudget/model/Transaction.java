@@ -216,7 +216,9 @@ public class Transaction implements Comparable<Transaction> {
     @Override
     public String toString() {
         return "Transaction{" +
-                " " + operationDate.get() +
+                "id: " + id.get() +
+                ", accountId: " + accountId.get() +
+                ", " + operationDate.get() +
                 ", " + transactionDate.get() +
                 ", " + description.get() +
                 ", " + amount.get() +

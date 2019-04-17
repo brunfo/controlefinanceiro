@@ -33,7 +33,7 @@ public class Controller {
 
     //********************* Database ***********************//
 
-    void loadDataFromDatabase() {
+    public void loadDataFromDatabase() {
         dbHandler = PersonalBudgetDaoImplementation.getInstance();
         accounts = new Accounts();
         budgets = new Budgets();
@@ -126,15 +126,30 @@ public class Controller {
         return false;
     }
 
+
     /**
      * Edits a transaction.
      *
-     * @param transaction the transaction
+     * @param tempTransaction the transaction
      * @return true if success.
      */
-    public boolean editTransaction(Transaction transaction) {
-        return changeTransactionAccount(transaction,
-                accounts.getAccountById(transaction.getAccountId()));
+    public boolean editTransaction(Transaction tempTransaction) {
+        //checks if transaction's have change
+        int id = dbHandler.getAccountIdFromTransaction(tempTransaction.getId());
+        if (id == tempTransaction.getAccount().getId())
+            return dbHandler.editTransaction(tempTransaction);
+        else {
+            //creates a clone of the transaction e sets it account to the original
+            Transaction originalTransaction = tempTransaction.clone();
+            originalTransaction.setAccount(accounts.getAccountById(id));
+            //send changes to database
+            if (dbHandler.editTransaction(tempTransaction))
+                //update accounts list
+                return accounts.editTransactionAccount(
+                        originalTransaction,
+                        tempTransaction.getAccount());
+        }
+        return false;
     }
 
     /**

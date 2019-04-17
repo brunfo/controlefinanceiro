@@ -2,7 +2,6 @@ package io.github.brunfo.apps.personalbudget.controller;
 
 import io.github.brunfo.apps.personalbudget.model.Account;
 import io.github.brunfo.apps.personalbudget.model.Transaction;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,10 +13,10 @@ import static org.junit.Assert.assertTrue;
 @SuppressWarnings("SpellCheckingInspection")
 public class AccountsUnitaryTests {
 
-    Account account = new Account(0, "Conta 1");
     private Controller controller = Controller.getInstance();
 
     public void printAccounts() {
+        controller.loadDataFromDatabase();
         System.out.println("************ Printing accounts ************");
         for (Account account : controller.getAccounts()) {
             printAccountTransactions(account);
@@ -32,7 +31,7 @@ public class AccountsUnitaryTests {
         System.out.println("-------------------------------------------------------------");
         for (Transaction transaction :
                 account.getTransactions()) {
-            System.out.println(transaction);
+            System.out.println(transaction.getId() + " : " + transaction);
         }
         System.out.println("-------------------------------------------------------------");
         System.out.println("Saldo : " + account.getBalance());
@@ -47,7 +46,7 @@ public class AccountsUnitaryTests {
     /**
      * removes all remaining data
      */
-    @After
+    @Test
     public void tearDown() {
         assertTrue(controller.clearAllData());
     }
@@ -90,6 +89,47 @@ public class AccountsUnitaryTests {
         //makes a transaction
         transaction.setAmount(28.);
         assertTrue(controller.addTransaction(transaction));
+    }
+
+    @Test
+    public void editTransaction() {
+
+        printAccounts();
+
+        Account account1 = new Account();
+        assertTrue(controller.addAccount(account1));
+        Account account2 = new Account();
+        assertTrue(controller.addAccount(account2));
+
+
+        printAccounts();
+
+        //create a transaction
+        Transaction transaction = new Transaction(
+                0,
+                account1.getId(),
+                LocalDate.now(),
+                LocalDate.now(),
+                "movimento 1",
+                10.0);
+        assertTrue(controller.addTransaction(transaction));
+
+        printAccounts();
+
+        //edit fields, except account
+        transaction.setAmount(20.);
+
+        assertTrue(controller.editTransaction(transaction));
+
+        printAccounts();
+
+        //edits the account
+        transaction.setAccount(account2);
+        assertTrue(controller.editTransaction(transaction));
+
+        printAccounts();
+
+
     }
 
     @Test
