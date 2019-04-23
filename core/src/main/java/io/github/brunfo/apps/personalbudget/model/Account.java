@@ -27,8 +27,8 @@ public class Account {
     /**
      * Constructor
      */
-    public Account() {
-        this(0, null);
+    public Account(String name) {
+        this(0, name);
     }
 
     /**
@@ -71,13 +71,19 @@ public class Account {
         return transactions;
     }
 
-    public void updateBalance(double amount) {
-        balance += amount;
+    public void updateBalance() {
+        balance = 0.0;
+        for (Transaction transaction : getTransactions()) {
+            balance += transaction.getAmount();
+            //updates each transaction balance
+            transaction.setBalance(balance);
+        }
     }
 
     public double getBalance() {
         return balance;
     }
+
 
     public String toString() {
         return getId() + " : " + getName();

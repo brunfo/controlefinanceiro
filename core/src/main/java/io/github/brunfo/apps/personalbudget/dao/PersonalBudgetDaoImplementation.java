@@ -263,7 +263,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
     }
 
     @Override
-    public int addTransaction(Transaction transaction) {
+    public boolean addTransaction(Transaction transaction) {
         int id = -1;
         PreparedStatement stmtSaveNewRecord;
         try {
@@ -283,18 +283,19 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
             int rowCount = stmtSaveNewRecord.executeUpdate();
             ResultSet results = stmtSaveNewRecord.getGeneratedKeys();
             if (results.next()) {
-                id = results.getInt(1);
+                transaction.setId(results.getInt(1));
+                return true;
             }
         } catch (SQLException sqlError) {
             //if table does not exits, creates it and then save the transaction
             if (sqlError.getErrorCode() == 30000 &&
                     sqlError.getSQLState().equalsIgnoreCase("42X05")) {
                 createTable("APP.TRANSACTIONS", getTableTransactionsStr());
-                id = addTransaction(transaction);
+                return addTransaction(transaction);
             } else
                 printSQLException(sqlError);
         }
-        return id;
+        return false;
     }
 
     //////// ACCOUNTS ////////////
@@ -363,8 +364,7 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
     }
 
     @Override
-    public int addAccount(Account account) {
-        int id = -1;
+    public boolean addAccount(Account account) {
         PreparedStatement stmtSaveNewRecord;
         try {
             stmtSaveNewRecord = dbConnection.prepareStatement(
@@ -379,18 +379,19 @@ public class PersonalBudgetDaoImplementation implements PersonalBudgetDao {
             int rowCount = stmtSaveNewRecord.executeUpdate();
             ResultSet results = stmtSaveNewRecord.getGeneratedKeys();
             if (results.next()) {
-                id = results.getInt(1);
+                account.setId(results.getInt(1));
+                return true;
             }
         } catch (SQLException sqlError) {
             //if table does not exits, creates it and then save the account
             if (sqlError.getErrorCode() == 30000 &&
                     sqlError.getSQLState().equalsIgnoreCase("42X05")) {
                 createTable("APP.ACCOUNTS", getTableAccountsStr());
-                id = addAccount(account);
+                addAccount(account);
             } else
                 printSQLException(sqlError);
         }
-        return id;
+        return false;
     }
 
     @Override

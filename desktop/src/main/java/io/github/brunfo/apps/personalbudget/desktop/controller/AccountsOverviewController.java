@@ -38,7 +38,7 @@ public class AccountsOverviewController implements OverviewController {
 
     @FXML
     private void handleNewAccount() {
-        Account tempAccount = new Account();
+        Account tempAccount = new Account(null);
         boolean okClicked = desktopApp.showAccountEditDialog(tempAccount);
         if (okClicked) {
             desktopApp.addAccount(tempAccount);

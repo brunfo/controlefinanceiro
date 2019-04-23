@@ -32,15 +32,11 @@ public class PersonalBudgetDaoImplementationTest {
         printTransactions();
 
         //creates new transaction
-        Account account1 = new Account(1, "Account 1");
+        Account account1 = new Account("Account 1");
         Transaction transaction = new Transaction(1, account1.getId(), LocalDate.now(), LocalDate.now(), "movimento", 20.0);
 
         //adds it to database, gets the id and assign it to the object
-        transaction.setId(dbHandler.addTransaction(transaction));
-        System.out.println(transaction);
-
-        //test if was successfully added to database, by getting a id superior to -1
-        assert (transaction.getId() >= 0);
+        assertTrue(dbHandler.addTransaction(transaction));
 
         //prints all transactions in database
         printTransactions();
@@ -58,7 +54,7 @@ public class PersonalBudgetDaoImplementationTest {
         assert (dbHandler.getAccountIdFromTransaction(transaction.getId()) == account1.getId());
 
         //changes the account and amount
-        Account account2 = new Account(2, "Account 2");
+        Account account2 = new Account("Account 2");
         transaction.setAccount(account2);
         transaction.setAmount(30.0);
         assertTrue(dbHandler.editTransaction(transaction));
@@ -68,20 +64,16 @@ public class PersonalBudgetDaoImplementationTest {
         printTransactions();
 
         //removes the transaction from database
-        System.out.println("\n***** remove *****");
         assertTrue(dbHandler.removeTransaction(transaction.getId()));
         printTransactions();
-
-        System.out.println("*** end remove ***");
     }
 
     @Test
     public void accountTests() {
         printAccounts();
         //add account
-        Account account = new Account(0, "account 1");
-        account.setId(dbHandler.addAccount(account));
-        assert (account.getId() >= 0);
+        Account account = new Account("account 1");
+        assertTrue(dbHandler.addAccount(account));
         printAccounts();
 
         //changes name
@@ -89,29 +81,29 @@ public class PersonalBudgetDaoImplementationTest {
         assertTrue(dbHandler.editAccount(account));
         printAccounts();
 
-        //changes id of object but not in database
-        int savedId = account.getId();
-        account.setId(2);
-        assertFalse(dbHandler.editAccount(account));
-        printAccounts();
-
         //removes nonexistent account
-        assertFalse(dbHandler.removeAccount(account.getId()));
+        assertFalse(dbHandler.removeAccount(new Account(null).getId()));
         printAccounts();
 
         //removes existent account
-        assertTrue(dbHandler.removeAccount(savedId));
+
+        assertTrue(dbHandler.removeAccount(account.getId()));
         printAccounts();
+
 
     }
 
     private void printTransactions() {
+        System.out.println("\n*\t*\t*\t*\t* PRINTING TRANSACTIONS *\t*\t*\t*\t*\n");
         //prints all transactions in database
         dbHandler.getTransactions().forEach(System.out::println);
+        System.out.println("\n*\t*\t*\t*\tEND PRINTING TRANSACTIONS\t*\t*\t*\t*\n\n\n");
     }
 
     private void printAccounts() {
+        System.out.println("\n*\t*\t*\t*\t* PRINTING ACCOUNTS *\t*\t*\t*\t*\n");
         //prints all transactions in database
         dbHandler.getAccounts().forEach(System.out::println);
+        System.out.println("\n*\t*\t*\t*\tEND PRINTING ACCOUNTS\t*\t*\t*\t*\n\n\n");
     }
 }

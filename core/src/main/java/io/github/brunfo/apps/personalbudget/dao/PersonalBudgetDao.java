@@ -15,7 +15,7 @@ public interface PersonalBudgetDao {
 
     boolean editTransaction(Transaction transaction);
 
-    int addTransaction(Transaction transaction);
+    boolean addTransaction(Transaction transaction);
 
     List<Account> getAccounts();
 
@@ -25,6 +25,6 @@ public interface PersonalBudgetDao {
 
     boolean editAccount(Account account);
 
-    int addAccount(Account account);
+    boolean addAccount(Account account);
 
 }

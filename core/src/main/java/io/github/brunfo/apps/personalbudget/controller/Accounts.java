@@ -3,6 +3,7 @@ package io.github.brunfo.apps.personalbudget.controller;
 import io.github.brunfo.apps.personalbudget.model.Account;
 import io.github.brunfo.apps.personalbudget.model.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class Accounts {
@@ -11,12 +12,12 @@ class Accounts {
 
     private boolean allowNegativeBalance = false;
 
-    void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
-
     List<Account> getAccounts() {
         return accounts;
+    }
+
+    void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 
     boolean addAccount(Account tempAccount) {
@@ -68,34 +69,44 @@ class Accounts {
                         allowNegativeBalance)) {
             account.getTransactions().add(tempTransaction);
             //updates the account balance
-            account.updateBalance(tempTransaction.getAmount());
-            //update the transaction balance
-            tempTransaction.setBalance(account.getBalance());
+            account.updateBalance();
+
             return true;
         }
         return false;
     }
 
-    boolean editTransactionAccount(Transaction transaction, Account account) {
+    boolean editTransaction(Transaction transaction) {
+        Account account = transaction.getAccount();
+        //creates a virtual list of transaction, adding all except the transaction to be edited
+        List<Transaction> virtualTransactions = new ArrayList<>();
+        account.getTransactions().forEach(t -> {
+            if (t != transaction) virtualTransactions.add(t);
+        });
+        //gets the projected balance
+        double virtualBalance = virtualTransactions.stream().mapToDouble(Transaction::getAmount).sum();
+        if (virtualBalance + transaction.getAmount() >= 0 ||
+                allowNegativeBalance) {
+            //updates account balance
+            transaction.getAccount().updateBalance();
+            return true;
+        }
+        return false;
+    }
+
+    boolean editAccountTransaction(Transaction transaction, Account account) {
         if (isAccountValid(account)) {
             Account oldAccount = getAccountById(transaction.getAccountId());
             removeTransaction(transaction);
             transaction.setAccount(account);
             addTransaction(transaction);
-            updateTransactionsBalance(oldAccount);
-            updateTransactionsBalance(account);
+            oldAccount.updateBalance();
+            account.updateBalance();
             return true;
         }
         return false;
     }
 
-    private void updateTransactionsBalance(Account account) {
-        double balance = 0.0;
-        for (Transaction transaction : account.getTransactions()) {
-            balance += transaction.getAmount();
-            transaction.setBalance(balance);
-        }
-    }
 
     Transaction copyTransaction(Transaction transaction) {
         return new Transaction(
@@ -117,7 +128,7 @@ class Accounts {
     boolean removeTransaction(Transaction transaction) {
         Account account = getAccountById(transaction.getAccountId());
         if (isAccountValid(account) && account.getTransactions().remove(transaction)) {
-            account.updateBalance(-1 * transaction.getAmount());
+            account.updateBalance();
             return true;
         }
         return false;

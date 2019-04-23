@@ -80,9 +80,7 @@ public class Controller {
      */
     public boolean addAccount(Account tempAccount) {
         //saves the transaction to db
-        int id = dbHandler.addAccount(tempAccount);
-        if (id >= 0) {
-            tempAccount.setId(id);
+        if (dbHandler.addAccount(tempAccount)) {
             return accounts.addAccount(tempAccount);
         }
         return false;
@@ -118,9 +116,7 @@ public class Controller {
      */
     public boolean addTransaction(Transaction tempTransaction) {
         //saves transactions to database and gets the id
-        int id = dbHandler.addTransaction(tempTransaction);
-        if (id >= 0) {
-            tempTransaction.setId(id);
+        if (dbHandler.addTransaction(tempTransaction)) {
             return accounts.addTransaction(tempTransaction);
         }
         return false;
@@ -134,18 +130,20 @@ public class Controller {
      * @return true if success.
      */
     public boolean editTransaction(Transaction tempTransaction) {
-        //checks if transaction's have change
-        int id = dbHandler.getAccountIdFromTransaction(tempTransaction.getId());
-        if (id == tempTransaction.getAccount().getId())
-            return dbHandler.editTransaction(tempTransaction);
+        //checks if transaction's Account id have change
+        int dbAccountId = dbHandler.getAccountIdFromTransaction(tempTransaction.getId());
+        if (dbAccountId == tempTransaction.getAccount().getId())
+            return accounts.editTransaction(tempTransaction) &&
+                    dbHandler.editTransaction(tempTransaction);
+
         else {
             //creates a clone of the transaction e sets it account to the original
             Transaction originalTransaction = tempTransaction.clone();
-            originalTransaction.setAccount(accounts.getAccountById(id));
+            originalTransaction.setAccount(accounts.getAccountById(dbAccountId));
             //send changes to database
             if (dbHandler.editTransaction(tempTransaction))
                 //update accounts list
-                return accounts.editTransactionAccount(
+                return accounts.editAccountTransaction(
                         originalTransaction,
                         tempTransaction.getAccount());
         }
@@ -211,7 +209,7 @@ public class Controller {
      */
     public boolean changeTransactionAccount(Transaction transaction, Account account) {
         Transaction tempTransaction = transaction.clone();
-        if (accounts.editTransactionAccount(transaction, account)) {
+        if (accounts.editAccountTransaction(transaction, account)) {
             return dbHandler.editTransaction(transaction);
         }
         return false;

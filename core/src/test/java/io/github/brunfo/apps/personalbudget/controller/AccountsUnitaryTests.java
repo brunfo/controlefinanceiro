@@ -61,7 +61,7 @@ public class AccountsUnitaryTests {
 
     @Test
     public void addAndRemoveAccount() {
-        Account account = new Account();
+        Account account = new Account(null);
         assertTrue(controller.addAccount(account));
         assertTrue(controller.removeAccount(controller.getAccountById(account.getId())));
         assertFalse(controller.removeAccount(controller.getAccountById(account.getId())));
@@ -70,7 +70,7 @@ public class AccountsUnitaryTests {
     @Test
     public void addTransaction() {
         //adding account
-        Account account = new Account();
+        Account account = new Account(null);
         assertTrue(controller.addAccount(account));
 
         //create transacntion
@@ -96,9 +96,9 @@ public class AccountsUnitaryTests {
 
         printAccounts();
 
-        Account account1 = new Account();
+        Account account1 = new Account(null);
         assertTrue(controller.addAccount(account1));
-        Account account2 = new Account();
+        Account account2 = new Account(null);
         assertTrue(controller.addAccount(account2));
 
 
