@@ -1,7 +1,5 @@
 package io.github.brunfo.apps.personalbudget.controller;
 
-import io.github.brunfo.apps.personalbudget.model.Budget;
-import io.github.brunfo.apps.personalbudget.model.Family;
 import io.github.brunfo.apps.personalbudget.model.Item;
 import io.github.brunfo.apps.personalbudget.model.Transaction;
 
@@ -11,9 +9,13 @@ import java.util.Map;
 
 class Budgets {
 
-    private final List<Budget> budgets = new ArrayList<>();
+    private final List<Item> budgets = new ArrayList<>();
 
-    boolean addBudget(Budget tempBudget) {
+    List<Item> get() {
+        return budgets;
+    }
+
+    boolean addBudget(Item tempBudget) {
         return budgets.add(tempBudget);
     }
 
@@ -21,30 +23,15 @@ class Budgets {
         return budgets.remove(getBudget(budget));
     }
 
-    Budget getBudget(String name) {
-        for (Budget budget : budgets) {
+    Item getBudget(String name) {
+        for (Item budget : budgets) {
             if (budget.getName().equals(name))
                 return budget;
         }
         return null;
     }
 
-    Budget getBudgetById(int id) {
-        for (Budget budget : budgets) {
-            if (budget.getId() == id)
-                return budget;
-        }
-        return null;
-    }
 
-    List<Item> getItemsByFamily(Family family, String budget) {
-        List<Item> items = new ArrayList<>();
-        for (Item item : getBudget(budget).getItems()) {
-            if (item.getFamily() == family)
-                items.add(item);
-        }
-        return items;
-    }
 
     /**
      * Splits a transaction in two different items from the budget.

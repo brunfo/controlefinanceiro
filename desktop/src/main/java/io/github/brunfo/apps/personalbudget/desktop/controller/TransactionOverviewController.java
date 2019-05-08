@@ -174,8 +174,10 @@ public class TransactionOverviewController implements OverviewController {
             //if click ok && valid transaction
             if (okClicked && desktopApp.editTransaction(selectedTransaction)) {
                 //removes the transaction on the old account if is different
-                if (!oldAccount.equals(selectedTransaction.getAccount()))
+                if (!oldAccount.equals(selectedTransaction.getAccount())) {
                     oldAccount.getTransactions().remove(selectedTransaction);
+                    oldAccount.updateBalance();
+                }
                 //sets combo box width the account of the new transaction
                 accountComboBox.setValue(selectedTransaction.getAccount());
                 //refresh the table view

@@ -2,7 +2,9 @@ package io.github.brunfo.apps.personalbudget.controller;
 
 import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDao;
 import io.github.brunfo.apps.personalbudget.dao.PersonalBudgetDaoImplementation;
-import io.github.brunfo.apps.personalbudget.model.*;
+import io.github.brunfo.apps.personalbudget.model.Account;
+import io.github.brunfo.apps.personalbudget.model.Item;
+import io.github.brunfo.apps.personalbudget.model.Transaction;
 
 import java.util.List;
 
@@ -218,7 +220,11 @@ public class Controller {
 
     //********************* Budgets ***********************//
 
-    public boolean addBudget(Budget tempBudget) {
+    public List<Item> getBudgets() {
+        return budgets.get();
+    }
+
+    public boolean addBudget(Item tempBudget) {
         return budgets.addBudget(tempBudget);
     }
 
@@ -226,34 +232,9 @@ public class Controller {
         return budgets.removeBudget(budget);
     }
 
-    public Budget getBudget(String budgetName) {
+    public Item getBudget(String budgetName) {
         return budgets.getBudget(budgetName);
     }
 
-    public boolean addItemToBudget(Item item, String budget) {
-        return budgets.addItemToBudget(item, budget);
-    }
-
-    public boolean removeItemFromBudget(Item item, String budget) {
-        return budgets.removeItemFromBudget(item, budget);
-    }
-
-    public List<Item> getItemsByFamily(Family family, String budget) {
-        return budgets.getItemsByFamily(family, budget);
-    }
-
-    /**
-     * Splits a transaction in two different items from the budget.
-     * If an item1 equals 0 after split, it will be removed, behaving like replace items.
-     *
-     * @param transaction transaction.
-     * @param item        Item to split.
-     * @param newItem     second item.
-     * @param amount      Amount for second item.
-     * @return true if success.
-     */
-    public boolean splitTransactionByBudgetItems(Transaction transaction, Item item, Item newItem, double amount) {
-        return budgets.splitTransactionByBudgetItems(transaction, item, newItem, amount);
-    }
 
 }

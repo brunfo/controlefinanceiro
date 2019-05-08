@@ -26,7 +26,7 @@ import java.util.prefs.Preferences;
  */
 public class DesktopApp extends Application {
 
-    public final String TITLE = "Personal Budget";
+    public final String TITLE = "Personal Item";
     public final String VERSION = "1.1-SNAPSHOT";
     /**
      * The data as an observable list of Transactions.
